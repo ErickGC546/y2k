@@ -45,7 +45,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         )}
         
         {/* Quick actions overlay */}
-        <div className="product-actions absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 p-3 flex justify-between opacity-0 transition-opacity duration-300">
+        <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 p-3 flex justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <button className="text-white hover:text-estilo-gold transition-colors">
             <Heart size={20} />
           </button>
