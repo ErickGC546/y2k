@@ -99,6 +99,14 @@ const productsByCategory: Record<string, Product[]> = {
       image: 'https://images.unsplash.com/photo-1503944583220-79d8926ad5e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80',
       slug: 'camiseta-estampada-ninos',
     },
+    {
+      id: 19,
+      name: 'Zapatillas Infantiles',
+      category: 'Niños',
+      price: 29.99,
+      image: 'https://images.unsplash.com/photo-1555274175-75f4056dfd05?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80',
+      slug: 'zapatillas-infantiles',
+    },
   ],
   accesorios: [
     {
@@ -143,6 +151,14 @@ const productsByCategory: Record<string, Product[]> = {
       price: 29.99,
       image: 'https://images.unsplash.com/photo-1606902965551-dce093cda6e7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
       slug: 'camiseta-tecnica',
+    },
+    {
+      id: 20,
+      name: 'Pantalón Deportivo',
+      category: 'Deportes',
+      price: 39.99,
+      image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=840&q=80',
+      slug: 'pantalon-deportivo',
     },
   ],
   ofertas: [
