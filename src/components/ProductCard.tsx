@@ -2,6 +2,7 @@
 import React from 'react';
 import { ShoppingBag, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useCart } from '../contexts/CartContext';
 
 export interface Product {
   id: number;
@@ -20,6 +21,14 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const { addToCart } = useCart();
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addToCart(product, 1);
+  };
+
   return (
     <div className="group product-card relative bg-white overflow-hidden">
       <div className="relative">
@@ -49,7 +58,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <button className="text-white hover:text-estilo-gold transition-colors">
             <Heart size={20} />
           </button>
-          <button className="bg-estilo-gold text-white py-1 px-4 text-sm font-bold hover:bg-opacity-90 transition-colors flex items-center">
+          <button 
+            className="bg-estilo-gold text-white py-1 px-4 text-sm font-bold hover:bg-opacity-90 transition-colors flex items-center"
+            onClick={handleAddToCart}
+          >
             <ShoppingBag size={16} className="mr-1" />
             AÑADIR
           </button>

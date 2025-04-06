@@ -1,10 +1,11 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { ArrowLeft, ShoppingBag, Heart } from 'lucide-react';
 import { Product } from '../components/ProductCard';
+import { useCart } from '../contexts/CartContext';
 
 // Mock data - using the same products as in CategoryPage
 const products: Product[] = [
@@ -40,6 +41,9 @@ const products: Product[] = [
 
 const ProductPage: React.FC = () => {
   const { productSlug } = useParams<{ productSlug: string }>();
+  const { addToCart } = useCart();
+  const [quantity, setQuantity] = useState(1);
+  const [size, setSize] = useState('m');
   
   // Find the product by slug
   const product = products.find(p => p.slug === productSlug);
@@ -62,6 +66,10 @@ const ProductPage: React.FC = () => {
       </div>
     );
   }
+
+  const handleAddToCart = () => {
+    addToCart(product, quantity);
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -136,6 +144,8 @@ const ProductPage: React.FC = () => {
                   </label>
                   <select
                     id="size"
+                    value={size}
+                    onChange={(e) => setSize(e.target.value)}
                     className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-estilo-gold"
                   >
                     <option value="s">S</option>
@@ -151,6 +161,8 @@ const ProductPage: React.FC = () => {
                   </label>
                   <select
                     id="quantity"
+                    value={quantity}
+                    onChange={(e) => setQuantity(parseInt(e.target.value))}
                     className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-estilo-gold"
                   >
                     <option value="1">1</option>
@@ -163,7 +175,10 @@ const ProductPage: React.FC = () => {
               </div>
               
               <div className="flex space-x-4">
-                <button className="flex-1 bg-estilo-gold text-white py-3 font-bold hover:bg-opacity-90 transition-colors flex items-center justify-center">
+                <button 
+                  className="flex-1 bg-estilo-gold text-white py-3 font-bold hover:bg-opacity-90 transition-colors flex items-center justify-center"
+                  onClick={handleAddToCart}
+                >
                   <ShoppingBag size={18} className="mr-2" />
                   AÑADIR AL CARRITO
                 </button>
