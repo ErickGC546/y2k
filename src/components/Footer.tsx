@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, CreditCard, Clock, Truck, Instagram, Facebook, Twitter } from 'lucide-react';
@@ -56,7 +55,6 @@ const Footer = () => {
             <ul className="space-y-2 text-sm">
               <li><Link to="/categoria/mujer" className="text-gray-400 hover:text-estilo-gold transition-colors">Mujer</Link></li>
               <li><Link to="/categoria/hombre" className="text-gray-400 hover:text-estilo-gold transition-colors">Hombre</Link></li>
-              <li><Link to="/categoria/ninos" className="text-gray-400 hover:text-estilo-gold transition-colors">Niños</Link></li>
               <li><Link to="/categoria/accesorios" className="text-gray-400 hover:text-estilo-gold transition-colors">Accesorios</Link></li>
               <li><Link to="/categoria/deportes" className="text-gray-400 hover:text-estilo-gold transition-colors">Deportes</Link></li>
               <li><Link to="/categoria/ofertas" className="text-gray-400 hover:text-estilo-gold transition-colors">Ofertas</Link></li>

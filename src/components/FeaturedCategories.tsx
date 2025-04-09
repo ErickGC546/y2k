@@ -23,12 +23,6 @@ const categories = [
     slug: 'accesorios',
   },
   {
-    id: 4,
-    name: 'Niños',
-    image: 'https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=772&q=80',
-    slug: 'ninos',
-  },
-  {
     id: 5,
     name: 'Deportes',
     image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80',
@@ -42,7 +36,7 @@ const FeaturedCategories = () => {
       <div className="container mx-auto">
         <h2 className="text-3xl font-bold font-montserrat text-center mb-10">Categorías Destacadas</h2>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {categories.map((category) => (
             <Link 
               to={`/categoria/${category.slug}`} 

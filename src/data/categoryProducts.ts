@@ -76,32 +76,6 @@ export const productsByCategory: Record<string, Product[]> = {
       slug: 'pantalon-chino',
     },
   ],
-  ninos: [
-    {
-      id: 12,
-      name: 'Conjunto Infantil',
-      category: 'Niños',
-      price: 34.99,
-      image: 'https://images.unsplash.com/photo-1522771930-78848d9293e8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80',
-      slug: 'conjunto-infantil',
-    },
-    {
-      id: 13,
-      name: 'Camiseta Estampada',
-      category: 'Niños',
-      price: 19.99,
-      image: 'https://images.unsplash.com/photo-1503944583220-79d8926ad5e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80',
-      slug: 'camiseta-estampada-ninos',
-    },
-    {
-      id: 19,
-      name: 'Zapatillas Infantiles',
-      category: 'Niños',
-      price: 29.99,
-      image: 'https://images.unsplash.com/photo-1555274175-75f4056dfd05?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80',
-      slug: 'zapatillas-infantiles',
-    },
-  ],
   accesorios: [
     {
       id: 6,
@@ -242,7 +216,6 @@ export const productsByCategory: Record<string, Product[]> = {
 export const categoryNames: Record<string, string> = {
   mujer: 'Mujer',
   hombre: 'Hombre',
-  ninos: 'Niños',
   accesorios: 'Accesorios',
   deportes: 'Deportes',
   ofertas: 'Ofertas',
