@@ -4,8 +4,6 @@ import Navbar from '../components/Navbar';
 import HeroCarousel from '../components/HeroCarousel';
 import FeaturedCategories from '../components/FeaturedCategories';
 import FeaturedProducts from '../components/FeaturedProducts';
-import PromoSection from '../components/PromoSection';
-import NewsletterSection from '../components/NewsletterSection';
 import Footer from '../components/Footer';
 
 const Index = () => {
@@ -17,9 +15,7 @@ const Index = () => {
         <HeroCarousel />
         <FeaturedCategories />
         <FeaturedProducts title="Productos Destacados" limit={8} />
-        <PromoSection />
         <FeaturedProducts title="Nuevas Llegadas" viewAllLink="/categoria/novedades" limit={4} />
-        <NewsletterSection />
       </main>
       
       <Footer />
