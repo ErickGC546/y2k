@@ -15,6 +15,7 @@ const Index = () => {
         <HeroCarousel />
         <FeaturedCategories />
         <FeaturedProducts title="Productos Destacados" limit={8} />
+        <FeaturedProducts title="Nuevas Llegadas" viewAllLink="/categoria/novedades" limit={4} />
       </main>
       
       <Footer />
