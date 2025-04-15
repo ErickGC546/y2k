@@ -38,7 +38,7 @@ export const productsByCategory: Record<string, Product[]> = {
     },
     {
       id: 21,
-      name: 'Conjunto Deportivo Rosa',
+      name: 'Chándal DENIM TEARS (Azul)',
       category: 'Mujer',
       price: 69.99,
       image: 'https://img.ltwebstatic.com/images3_pi/2024/09/29/ed/1727574664fe40288625052e2467a05feaca4a2460_thumbnail_336x.jpg',
@@ -47,7 +47,7 @@ export const productsByCategory: Record<string, Product[]> = {
     },
     {
       id: 22,
-      name: 'Set Deportivo Negro',
+      name: 'Corteiz C-Star Tracksuit Black',
       category: 'Mujer',
       price: 75.99,
       image: 'https://d141zx60z515qt.cloudfront.net/mp5265662ed2/pr350ad/img0_1200w.webp',
@@ -56,7 +56,7 @@ export const productsByCategory: Record<string, Product[]> = {
     },
     {
       id: 23,
-      name: 'Zapatillas Runner Elite',
+      name: 'Trapstar London Trapstar',
       category: 'Mujer',
       price: 129.99,
       image: 'https://tnairshoes.com.au/cdn/shop/files/image_ca2f328c-791e-403d-82df-287622cf13bc_1445x.jpg?v=1689510848',
@@ -74,7 +74,7 @@ export const productsByCategory: Record<string, Product[]> = {
     },
     {
       id: 25,
-      name: 'Chaqueta Essential',
+      name: 'Chándal DENIM TEARS (Rosa)',
       category: 'Mujer',
       price: 95.99,
       image: 'https://i.pinimg.com/736x/45/b3/51/45b3512a3d7b206945dbf70a3ef54be5.jpg',
@@ -83,7 +83,7 @@ export const productsByCategory: Record<string, Product[]> = {
     },
     {
       id: 26,
-      name: 'Sudadera Urban Style',
+      name: 'Poleron Syna World',
       category: 'Mujer',
       price: 79.99,
       image: 'https://dripkickzz.com/wp-content/uploads/2025/01/8c7c7fd2-scaled-1-510x510.jpg',
@@ -139,7 +139,7 @@ export const productsByCategory: Record<string, Product[]> = {
     },
     {
       id: 25,
-      name: 'Chaqueta Essential',
+      name: 'Chándal DENIM TEARS (Rosa)',
       category: 'Hombre',
       price: 95.99,
       image: 'https://i.pinimg.com/736x/45/b3/51/45b3512a3d7b206945dbf70a3ef54be5.jpg',
@@ -148,7 +148,7 @@ export const productsByCategory: Record<string, Product[]> = {
     },
     {
       id: 26,
-      name: 'Sudadera Urban Style',
+      name: 'Poleron Syna World',
       category: 'Hombre',
       price: 79.99,
       image: 'https://dripkickzz.com/wp-content/uploads/2025/01/8c7c7fd2-scaled-1-510x510.jpg',
@@ -157,7 +157,7 @@ export const productsByCategory: Record<string, Product[]> = {
     },
     {
       id: 21,
-      name: 'Conjunto Deportivo Sport',
+      name: 'Chándal DENIM TEARS (Azul)',
       category: 'Hombre',
       price: 69.99,
       image: 'https://img.ltwebstatic.com/images3_pi/2024/09/29/ed/1727574664fe40288625052e2467a05feaca4a2460_thumbnail_336x.jpg',
@@ -166,7 +166,7 @@ export const productsByCategory: Record<string, Product[]> = {
     },
     {
       id: 22,
-      name: 'Set Deportivo Pro',
+      name: 'Corteiz C-Star Tracksuit Black',
       category: 'Hombre',
       price: 75.99,
       image: 'https://d141zx60z515qt.cloudfront.net/mp5265662ed2/pr350ad/img0_1200w.webp',
@@ -175,7 +175,7 @@ export const productsByCategory: Record<string, Product[]> = {
     },
     {
       id: 23,
-      name: 'Zapatillas Performance',
+      name: 'Trapstar London Trapstar',
       category: 'Hombre',
       price: 129.99,
       image: 'https://tnairshoes.com.au/cdn/shop/files/image_ca2f328c-791e-403d-82df-287622cf13bc_1445x.jpg?v=1689510848',
