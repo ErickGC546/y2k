@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -115,10 +114,10 @@ const ProductPage: React.FC = () => {
               <p className="text-gray-600 mb-4">{product.category}</p>
               
               <div className="flex items-baseline mb-6">
-                <span className="text-3xl font-bold mr-3">{product.price.toFixed(2)} €</span>
+                <span className="text-3xl font-bold mr-3">S/ {product.price.toFixed(2)}</span>
                 {product.originalPrice && (
                   <span className="text-gray-500 line-through text-lg">
-                    {product.originalPrice.toFixed(2)} €
+                    S/ {product.originalPrice.toFixed(2)}
                   </span>
                 )}
               </div>

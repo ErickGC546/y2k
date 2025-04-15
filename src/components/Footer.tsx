@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, CreditCard, Clock, Truck, Instagram, Facebook, Twitter } from 'lucide-react';
+import { Mail, Phone, MapPin, CreditCard, Clock, Truck, Instagram, Facebook, Twitter, MessageCircle } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -26,7 +26,7 @@ const Footer = () => {
           <div className="flex flex-col items-center text-center">
             <Phone className="mb-3 text-estilo-gold" size={24} />
             <h3 className="font-semibold mb-2">Atención al Cliente</h3>
-            <p className="text-sm text-gray-400">Lun-Vie 9:00-18:00</p>
+            <p className="text-sm text-gray-400">Respuesta rápida y personalizada</p>
           </div>
         </div>
 
@@ -69,6 +69,8 @@ const Footer = () => {
               <li><Link to="/devoluciones" className="text-gray-400 hover:text-estilo-gold transition-colors">Devoluciones</Link></li>
               <li><Link to="/preguntas-frecuentes" className="text-gray-400 hover:text-estilo-gold transition-colors">Preguntas frecuentes</Link></li>
               <li><Link to="/contacto" className="text-gray-400 hover:text-estilo-gold transition-colors">Contacto</Link></li>
+              <li><Link to="/servicio-cliente" className="text-gray-400 hover:text-estilo-gold transition-colors">Servicio al cliente</Link></li>
+              <li><Link to="/chat-soporte" className="text-gray-400 hover:text-estilo-gold transition-colors">Chat de soporte</Link></li>
             </ul>
           </div>
 
@@ -81,11 +83,15 @@ const Footer = () => {
               </li>
               <li className="flex items-center">
                 <Phone size={18} className="mr-2 flex-shrink-0 text-estilo-gold" />
-                <a href="tel:+34600000000" className="text-gray-400 hover:text-estilo-gold transition-colors">955 286 210</a>
+                <a href="tel:+51955286210" className="text-gray-400 hover:text-estilo-gold transition-colors">955 286 210</a>
               </li>
               <li className="flex items-center">
                 <Mail size={18} className="mr-2 flex-shrink-0 text-estilo-gold" />
-                <a href="mailto:info@estilo.com" className="text-gray-400 hover:text-estilo-gold transition-colors">y2kstore@gmail.com</a>
+                <a href="mailto:y2kstore@gmail.com" className="text-gray-400 hover:text-estilo-gold transition-colors">y2kstore@gmail.com</a>
+              </li>
+              <li className="flex items-center">
+                <MessageCircle size={18} className="mr-2 flex-shrink-0 text-estilo-gold" />
+                <span className="text-gray-400">Atención al cliente: Lun-Dom 9:00-21:00</span>
               </li>
             </ul>
           </div>
