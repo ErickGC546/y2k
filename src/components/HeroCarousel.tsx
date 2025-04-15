@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 const slides = [
   {
     id: 1,
-    image: '/lovable-uploads/777d3691-f8ad-4488-993c-5b4f5d5100aa.png',
+    image: 'https://oechsle.vteximg.com.br/arquivos/ids/20134200-800-800/2682726.jpg?v=638690454989870000',
     title: 'NUEVA COLECCIÓN PRIMAVERA',
     subtitle: 'Descubre las últimas tendencias',
     cta: 'COMPRAR AHORA',
