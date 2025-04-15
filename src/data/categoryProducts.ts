@@ -1,4 +1,3 @@
-
 import { Product } from '../components/ProductCard';
 
 // Mock data for products by category
@@ -37,6 +36,33 @@ export const productsByCategory: Record<string, Product[]> = {
       image: 'https://images.unsplash.com/photo-1583496661160-fb5886a773ba?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80',
       slug: 'falda-plisada',
     },
+    {
+      id: 21,
+      name: 'Conjunto Deportivo Rosa',
+      category: 'Mujer',
+      price: 69.99,
+      image: 'https://img.ltwebstatic.com/images3_pi/2024/09/29/ed/1727574664fe40288625052e2467a05feaca4a2460_thumbnail_336x.jpg',
+      isNew: true,
+      slug: 'conjunto-deportivo-rosa',
+    },
+    {
+      id: 22,
+      name: 'Set Deportivo Negro',
+      category: 'Mujer',
+      price: 75.99,
+      image: 'https://d141zx60z515qt.cloudfront.net/mp5265662ed2/pr350ad/img0_1200w.webp',
+      isNew: true,
+      slug: 'set-deportivo-negro',
+    },
+    {
+      id: 23,
+      name: 'Zapatillas Runner Elite',
+      category: 'Mujer',
+      price: 129.99,
+      image: 'https://tnairshoes.com.au/cdn/shop/files/image_ca2f328c-791e-403d-82df-287622cf13bc_1445x.jpg?v=1689510848',
+      isNew: true,
+      slug: 'zapatillas-runner-elite',
+    },
   ],
   hombre: [
     {
@@ -74,6 +100,33 @@ export const productsByCategory: Record<string, Product[]> = {
       price: 49.99,
       image: 'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
       slug: 'pantalon-chino',
+    },
+    {
+      id: 24,
+      name: 'Conjunto Corteiz Beige',
+      category: 'Hombre',
+      price: 89.99,
+      image: 'https://media.karousell.com/media/photos/products/2024/3/30/corteiz_crtz_hood__pants__beig_1711778357_735f83bb_progressive.jpg',
+      isNew: true,
+      slug: 'conjunto-corteiz-beige',
+    },
+    {
+      id: 25,
+      name: 'Chaqueta Essential',
+      category: 'Hombre',
+      price: 95.99,
+      image: 'https://i.pinimg.com/736x/45/b3/51/45b3512a3d7b206945dbf70a3ef54be5.jpg',
+      isNew: true,
+      slug: 'chaqueta-essential',
+    },
+    {
+      id: 26,
+      name: 'Sudadera Urban Style',
+      category: 'Hombre',
+      price: 79.99,
+      image: 'https://dripkickzz.com/wp-content/uploads/2025/01/8c7c7fd2-scaled-1-510x510.jpg',
+      isNew: true,
+      slug: 'sudadera-urban-style',
     },
   ],
   accesorios: [
