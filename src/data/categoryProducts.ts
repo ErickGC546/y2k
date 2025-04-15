@@ -25,7 +25,7 @@ export const productsByCategory: Record<string, Product[]> = {
       name: 'Blusa de Seda',
       category: 'Mujer',
       price: 45.99,
-      image: 'https://i.pinimg.com/736x/08/bc/3a/08bc3a495d6ccc3b93e38ba027ded292.jpg&w=687&q=80',
+      image: 'https://i.pinimg.com/736x/08/bc/3a/08bc3a495d6ccc3b93e38ba027ded292.jpg',
       slug: 'blusa-seda',
     },
     {
