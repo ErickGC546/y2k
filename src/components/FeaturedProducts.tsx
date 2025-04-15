@@ -1,81 +1,63 @@
-
 import React from 'react';
 import ProductCard, { Product } from './ProductCard';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 
-// Mock data
 const featuredProducts: Product[] = [
   {
-    id: 1,
-    name: 'Vestido Floral de Verano',
-    category: 'Mujer',
-    price: 49.99,
-    image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=720&q=80',
-    isNew: true,
-    slug: 'vestido-floral-verano',
-  },
-  {
-    id: 2,
-    name: 'Camisa Oxford Azul',
+    id: 24,
+    name: 'Conjunto Corteiz Beige',
     category: 'Hombre',
-    price: 39.99,
-    image: 'https://images.unsplash.com/photo-1589310243389-96a5483213a8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-    slug: 'camisa-oxford-azul',
-  },
-  {
-    id: 3,
-    name: 'Chaqueta de Cuero',
-    category: 'Hombre',
-    price: 129.99,
-    originalPrice: 159.99,
-    image: 'https://images.unsplash.com/photo-1520975954732-35dd22299614?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-    badge: 'OFERTA',
-    slug: 'chaqueta-cuero',
-  },
-  {
-    id: 4,
-    name: 'Zapatillas Deportivas',
-    category: 'Deportes',
-    price: 79.99,
-    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80',
-    slug: 'zapatillas-deportivas',
-  },
-  {
-    id: 5,
-    name: 'Jeans Slim Fit',
-    category: 'Mujer',
-    price: 59.99,
-    image: 'https://images.unsplash.com/photo-1475178626620-a4d074967452?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=686&q=80',
-    slug: 'jeans-slim-fit',
-  },
-  {
-    id: 6,
-    name: 'Reloj Clásico',
-    category: 'Accesorios',
     price: 89.99,
-    image: 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=688&q=80',
-    slug: 'reloj-clasico',
-  },
-  {
-    id: 7,
-    name: 'Suéter de Lana',
-    category: 'Hombre',
-    price: 69.99,
-    originalPrice: 89.99,
-    image: 'https://images.unsplash.com/photo-1614252369475-531eba835eb1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=715&q=80',
-    badge: 'OFERTA',
-    slug: 'sueter-lana',
-  },
-  {
-    id: 8,
-    name: 'Bolso de Cuero',
-    category: 'Accesorios',
-    price: 99.99,
-    image: 'https://images.unsplash.com/photo-1591561954557-26941169b49e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80',
+    image: 'https://media.karousell.com/media/photos/products/2024/3/30/corteiz_crtz_hood__pants__beig_1711778357_735f83bb_progressive.jpg',
     isNew: true,
-    slug: 'bolso-cuero',
+    slug: 'conjunto-corteiz-beige',
   },
+  {
+    id: 25,
+    name: 'Chándal DENIM TEARS (Rosa)',
+    category: 'Mujer',
+    price: 95.99,
+    image: 'https://i.pinimg.com/736x/45/b3/51/45b3512a3d7b206945dbf70a3ef54be5.jpg',
+    isNew: true,
+    slug: 'chaqueta-essential',
+  },
+  {
+    id: 26,
+    name: 'Poleron Syna World',
+    category: 'Hombre',
+    price: 79.99,
+    image: 'https://dripkickzz.com/wp-content/uploads/2025/01/8c7c7fd2-scaled-1-510x510.jpg',
+    isNew: true,
+    slug: 'sudadera-urban-style',
+  },
+  {
+    id: 21,
+    name: 'Chándal DENIM TEARS (Azul)',
+    category: 'Mujer',
+    price: 69.99,
+    image: 'https://img.ltwebstatic.com/images3_pi/2024/09/29/ed/1727574664fe40288625052e2467a05feaca4a2460_thumbnail_336x.jpg',
+    isNew: true,
+    slug: 'conjunto-deportivo-rosa',
+  },
+  {
+    id: 22,
+    name: 'Corteiz C-Star Tracksuit Black',
+    category: 'Hombre',
+    price: 75.99,
+    image: 'https://d141zx60z515qt.cloudfront.net/mp5265662ed2/pr350ad/img0_1200w.webp',
+    isNew: true,
+    slug: 'set-deportivo-negro',
+  },
+  {
+    id: 23,
+    name: 'Trapstar London Trapstar',
+    category: 'Mujer',
+    price: 129.99,
+    image: 'https://tnairshoes.com.au/cdn/shop/files/image_ca2f328c-791e-403d-82df-287622cf13bc_1445x.jpg?v=1689510848',
+    isNew: true,
+    slug: 'zapatillas-runner-elite',
+  }
 ];
 
 interface FeaturedProductsProps {
