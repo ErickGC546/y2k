@@ -24,12 +24,12 @@ const slides = [
   },
   {
     id: 3,
-    image: 'https://images.unsplash.com/photo-1479064555552-3ef4979f8908?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80',
+    image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80',
     title: 'COLECCIÓN EXCLUSIVA',
     subtitle: 'Diseños únicos y limitados',
     cta: 'DESCUBRIR',
     link: '/categoria/exclusiva',
-    altText: 'Modelo con ropa exclusiva'
+    altText: 'Modelo con colección exclusiva de moda'
   }
 ];
 

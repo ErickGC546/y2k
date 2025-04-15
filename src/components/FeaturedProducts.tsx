@@ -93,10 +93,10 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
     <section className="py-12 px-4">
       <div className="container mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold font-montserrat">{title}</h2>
+          <h2 className="text-2xl md:text-3xl font-bold font-montserrat text-white">{title}</h2>
           <Link 
             to={viewAllLink}
-            className="text-estilo-dark hover:text-estilo-gold transition-colors flex items-center text-sm font-medium"
+            className="text-white hover:text-estilo-gold transition-colors flex items-center text-sm font-medium"
           >
             Ver todo <ArrowRight size={16} className="ml-1" />
           </Link>
