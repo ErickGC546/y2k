@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Trash2, ShoppingBag, ChevronLeft, ChevronRight, X } from 'lucide-react';
@@ -87,7 +86,7 @@ const CartPage: React.FC = () => {
                 </div>
                 
                 <div className="flex flex-col items-end">
-                  <p className="font-bold">{(item.price * item.quantity).toFixed(2)} €</p>
+                  <p className="font-bold">S/ {(item.price * item.quantity).toFixed(2)}</p>
                   <button 
                     onClick={() => removeFromCart(item.id)}
                     className="text-gray-500 hover:text-red-500 transition-colors mt-2"
@@ -113,7 +112,7 @@ const CartPage: React.FC = () => {
             <div className="space-y-3 mb-6">
               <div className="flex justify-between">
                 <span>Subtotal</span>
-                <span>{getTotalPrice().toFixed(2)} €</span>
+                <span>S/ {getTotalPrice().toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Gastos de envío</span>
@@ -124,7 +123,7 @@ const CartPage: React.FC = () => {
             <div className="border-t pt-4 mb-6">
               <div className="flex justify-between font-bold text-lg">
                 <span>Total</span>
-                <span>{getTotalPrice().toFixed(2)} €</span>
+                <span>S/ {getTotalPrice().toFixed(2)}</span>
               </div>
               <p className="text-gray-500 text-sm mt-1">Impuestos incluidos</p>
             </div>

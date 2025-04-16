@@ -188,13 +188,6 @@ const ProductPage: React.FC = () => {
               </div>
             </div>
           </div>
-          
-          <div className="mt-12">
-            <Link to="/" className="flex items-center text-estilo-dark hover:text-estilo-gold transition-colors">
-              <ArrowLeft size={16} className="mr-1" />
-              Volver a la tienda
-            </Link>
-          </div>
         </div>
       </main>
       
