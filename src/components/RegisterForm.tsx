@@ -1,11 +1,11 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from "@/hooks/use-toast";
-
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -37,8 +37,9 @@ type FormValues = z.infer<typeof formSchema>;
 const RegisterForm = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [showPassword, setShowPassword] = React.useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -51,14 +52,35 @@ const RegisterForm = () => {
     },
   });
 
-  const onSubmit = (values: FormValues) => {
-    console.log('Register submitted:', values);
-    // Simulación de registro exitoso
-    toast({
-      title: "Cuenta creada con éxito",
-      description: "Bienvenido a ESTILO",
-    });
-    navigate('/');
+  const onSubmit = async (values: FormValues) => {
+    setIsLoading(true);
+    try {
+      const { error } = await supabase.auth.signUp({
+        email: values.email,
+        password: values.password,
+        options: {
+          data: {
+            full_name: values.name,
+          },
+        },
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Cuenta creada con éxito",
+        description: "Bienvenido a Y2K Store",
+      });
+      navigate('/');
+    } catch (error: any) {
+      toast({
+        title: "Error al crear la cuenta",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

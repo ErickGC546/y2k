@@ -1,13 +1,48 @@
-
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingBag, User, Search, Menu, X } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { getTotalItems } = useCart();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setIsAuthenticated(!!session);
+    });
+
+    // Check initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAuthenticated(!!session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      toast({
+        title: "Sesión cerrada",
+        description: "Has cerrado sesión correctamente",
+      });
+      navigate('/');
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: "No se pudo cerrar la sesión",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <header className="w-full">
@@ -20,12 +55,28 @@ const Navbar = () => {
             </Link>
           </div>
           <div className="flex items-center space-x-4 ml-auto">
-            <Link to="/iniciar-sesion" className="hover:text-estilo-gold transition-colors">
-              Iniciar sesión
-            </Link>
-            <Link to="/crear-cuenta" className="hover:text-estilo-gold transition-colors">
-              Crear una cuenta
-            </Link>
+            {isAuthenticated ? (
+              <>
+                <Link to="/mi-cuenta" className="hover:text-estilo-gold transition-colors">
+                  Mi Cuenta
+                </Link>
+                <button 
+                  onClick={handleLogout}
+                  className="hover:text-estilo-gold transition-colors"
+                >
+                  Cerrar sesión
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/iniciar-sesion" className="hover:text-estilo-gold transition-colors">
+                  Iniciar sesión
+                </Link>
+                <Link to="/crear-cuenta" className="hover:text-estilo-gold transition-colors">
+                  Crear una cuenta
+                </Link>
+              </>
+            )}
             <div className="hidden md:flex items-center space-x-3">
               <a href="#" className="hover:text-estilo-gold transition-colors">
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
