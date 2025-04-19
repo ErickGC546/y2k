@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Trash2, ShoppingBag, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { Trash2, ShoppingBag, ChevronLeft, ChevronRight, CreditCard, Building2, QrCode } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useCart } from '../contexts/CartContext';
@@ -33,13 +34,12 @@ const CartPage: React.FC = () => {
     );
   }
 
-  const handlePaypalCheckout = () => {
+  const handlePaymentProcess = () => {
     setPaymentProcessing(true);
     
     // Simulate payment processing
     setTimeout(() => {
-      toast.success("¡Pago completado con éxito!");
-      clearCart();
+      toast.error("Sistema de pagos en mantenimiento. Próximamente disponible.");
       setPaymentProcessing(false);
     }, 2000);
   };
@@ -51,7 +51,7 @@ const CartPage: React.FC = () => {
         <h1 className="text-2xl font-bold mb-8 font-montserrat">Mi Bolsa ({getTotalItems()} {getTotalItems() === 1 ? 'producto' : 'productos'})</h1>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Cart items - takes up 2/3 of the grid on large screens */}
+          {/* Cart items section */}
           <div className="lg:col-span-2 space-y-4">
             {cartItems.map((item) => (
               <div key={item.id} className="bg-white p-4 rounded-lg shadow-sm border flex items-center">
@@ -105,7 +105,7 @@ const CartPage: React.FC = () => {
             </div>
           </div>
           
-          {/* Order summary - takes up 1/3 of the grid on large screens */}
+          {/* Payment summary */}
           <div className="bg-white p-6 rounded-lg shadow-sm border h-fit sticky top-4">
             <h2 className="text-xl font-bold mb-4 font-montserrat">Resumen del pedido</h2>
             
@@ -127,12 +127,35 @@ const CartPage: React.FC = () => {
               </div>
               <p className="text-gray-500 text-sm mt-1">Impuestos incluidos</p>
             </div>
+
+            {/* Payment methods */}
+            <div className="space-y-3 mb-6">
+              <h3 className="font-medium text-sm mb-2">Métodos de pago disponibles:</h3>
+              
+              <div className="grid grid-cols-2 gap-3">
+                <div className="border rounded p-3 text-center text-sm">
+                  <CreditCard className="mx-auto mb-1 h-5 w-5" />
+                  <span className="block text-xs">Tarjetas</span>
+                </div>
+                <div className="border rounded p-3 text-center text-sm">
+                  <Building2 className="mx-auto mb-1 h-5 w-5" />
+                  <span className="block text-xs">Bancos</span>
+                </div>
+                <div className="border rounded p-3 text-center text-sm">
+                  <QrCode className="mx-auto mb-1 h-5 w-5" />
+                  <span className="block text-xs">Yape</span>
+                </div>
+                <div className="border rounded p-3 text-center text-sm">
+                  <QrCode className="mx-auto mb-1 h-5 w-5" />
+                  <span className="block text-xs">Plin</span>
+                </div>
+              </div>
+            </div>
             
-            {/* PayPal payment button */}
             <Button 
               disabled={paymentProcessing}
-              onClick={handlePaypalCheckout}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white mb-3 flex justify-center items-center"
+              onClick={handlePaymentProcess}
+              className="w-full bg-estilo-gold hover:bg-estilo-gold/90 text-white mb-3"
             >
               {paymentProcessing ? (
                 <div className="flex items-center">
@@ -140,35 +163,19 @@ const CartPage: React.FC = () => {
                   Procesando...
                 </div>
               ) : (
-                <>
-                  <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    viewBox="0 0 384 512" 
-                    className="h-4 w-4 mr-2 fill-current"
-                  >
-                    <path d="M111.4 295.9c-3.5 19.2-17.4 108.7-21.5 134-.3 1.8-1 2.5-3 2.5H12.3c-7.6 0-13.1-6.6-12.1-13.9L58.8 46.6c1.5-9.6 10.1-16.9 20-16.9 152.3 0 165.1-3.7 204 11.4 60.1 23.3 65.6 79.5 44 140.3-21.5 62.6-72.5 89.5-140.1 90.3-43.4.7-69.5-7-75.3 24.2zM357.1 152c-1.8-1.3-2.5-1.8-3 1.3-2 11.4-5.1 22.5-8.8 33.6-39.9 113.8-150.5 103.9-204.5 103.9-6.1 0-10.1 3.3-10.9 9.4-22.6 140.4-27.1 169.7-27.1 169.7-1 7.1 3.5 12.9 10.6 12.9h63.5c8.6 0 15.7-6.3 17-14.9 7.9-49.4 32.6-190.8 32.6-190.8.4-2.6 1.5-3.4 4.4-3.4 10.3 0 29.6 2.2 45.7 8.7 57.6 22.5 57.4 88.7 27.4 151.5-17 35.7-38.4 65.5-38.4 65.5a12.09 12.09 0
-                    0 0 1.9 17.1l34.5 28.6c7.7 6.4 19.1 1.9 19.7-8.4.2-2.5 17.2-113 63.6-236.5 3-8 1.3-15.7-5-20.7z"/>
-                  </svg>
-                  Pagar con PayPal
-                </>
+                'Proceder al pago'
               )}
             </Button>
             
             <p className="text-xs text-gray-500 mt-2 text-center">
-              Al hacer clic en "Pagar con PayPal", confirmas que aceptas nuestros términos y condiciones.
+              Al hacer clic en "Proceder al pago", confirmas que aceptas nuestros términos y condiciones.
             </p>
             
             <div className="mt-6 text-center">
               <p className="text-xs text-gray-500">Pago seguro garantizado</p>
-              <div className="flex justify-center mt-2">
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  viewBox="0 0 576 512" 
-                  className="h-6 w-6 text-blue-600 fill-current"
-                >
-                  <path d="M111.4 295.9c-3.5 19.2-17.4 108.7-21.5 134-.3 1.8-1 2.5-3 2.5H12.3c-7.6 0-13.1-6.6-12.1-13.9L58.8 46.6c1.5-9.6 10.1-16.9 20-16.9 152.3 0 165.1-3.7 204 11.4 60.1 23.3 65.6 79.5 44 140.3-21.5 62.6-72.5 89.5-140.1 90.3-43.4.7-69.5-7-75.3 24.2zM357.1 152c-1.8-1.3-2.5-1.8-3 1.3-2 11.4-5.1 22.5-8.8 33.6-39.9 113.8-150.5 103.9-204.5 103.9-6.1 0-10.1 3.3-10.9 9.4-22.6 140.4-27.1 169.7-27.1 169.7-1 7.1 3.5 12.9 10.6 12.9h63.5c8.6 0 15.7-6.3 17-14.9 7.9-49.4 32.6-190.8 32.6-190.8.4-2.6 1.5-3.4 4.4-3.4 10.3 0 29.6 2.2 45.7 8.7 57.6 22.5 57.4 88.7 27.4 151.5-17 35.7-38.4 65.5-38.4 65.5a12.09 12.09 0
-                  0 0 1.9 17.1l34.5 28.6c7.7 6.4 19.1 1.9 19.7-8.4.2-2.5 17.2-113 63.6-236.5 3-8 1.3-15.7-5-20.7z"/>
-                </svg>
+              <div className="flex justify-center gap-2 mt-2">
+                <img src="https://www.visa.com.pe/dam/VCOM/regional/lac/SPA/Default/Pay%20With%20Visa/Find%20a%20Card/Tarjetas-Visa.png" alt="Visa" className="h-6" />
+                <img src="https://www.mastercard.com.pe/content/dam/public/mastercardcom/lac/pe/home/consumidores/encontrar-tarjeta/tarjetas-credito/black-1280x720.png" alt="Mastercard" className="h-6" />
               </div>
             </div>
           </div>
