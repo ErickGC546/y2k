@@ -1,16 +1,36 @@
 
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Trash2, ShoppingBag, ChevronLeft, ChevronRight, CreditCard, Building2, QrCode } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useCart } from '../contexts/CartContext';
 import { Button } from '../components/ui/button';
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const CartPage: React.FC = () => {
+  const navigate = useNavigate();
   const { cartItems, removeFromCart, updateQuantity, getTotalPrice, getTotalItems, clearCart } = useCart();
   const [paymentProcessing, setPaymentProcessing] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    // Check authentication status when component mounts
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setIsAuthenticated(!!session);
+    };
+
+    checkAuth();
+
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setIsAuthenticated(!!session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
   
   // If cart is empty
   if (cartItems.length === 0) {
@@ -35,6 +55,12 @@ const CartPage: React.FC = () => {
   }
 
   const handlePaymentProcess = () => {
+    if (!isAuthenticated) {
+      toast.error("Debes iniciar sesión para realizar la compra");
+      navigate('/iniciar-sesion');
+      return;
+    }
+
     setPaymentProcessing(true);
     
     // Simulate payment processing
@@ -157,7 +183,9 @@ const CartPage: React.FC = () => {
               onClick={handlePaymentProcess}
               className="w-full bg-estilo-gold hover:bg-estilo-gold/90 text-white mb-3"
             >
-              {paymentProcessing ? (
+              {!isAuthenticated ? (
+                'Iniciar sesión para comprar'
+              ) : paymentProcessing ? (
                 <div className="flex items-center">
                   <div className="animate-spin mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
                   Procesando...

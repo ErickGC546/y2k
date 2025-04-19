@@ -17,8 +17,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Eye, EyeOff, Mail } from 'lucide-react';
-import { Separator } from "@/components/ui/separator";
+import { Eye, EyeOff } from 'lucide-react';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Ingresa un correo electrónico válido' }),
@@ -67,49 +66,9 @@ const LoginForm = () => {
     }
   };
 
-  const handleGoogleLogin = async () => {
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/`,
-        }
-      });
-
-      if (error) throw error;
-    } catch (error: any) {
-      toast({
-        title: "Error al iniciar sesión con Google",
-        description: error.message,
-        variant: "destructive",
-      });
-    }
-  };
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full flex gap-2 items-center justify-center"
-          onClick={handleGoogleLogin}
-        >
-          <Mail size={20} />
-          Continuar con Google
-        </Button>
-
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-white px-2 text-muted-foreground">
-              O inicia sesión con tu correo
-            </span>
-          </div>
-        </div>
-
         <FormField
           control={form.control}
           name="email"
