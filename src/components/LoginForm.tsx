@@ -17,7 +17,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Eye, EyeOff, Google } from 'lucide-react';
+import { Eye, EyeOff, Mail } from 'lucide-react';
 import { Separator } from "@/components/ui/separator";
 
 const formSchema = z.object({
@@ -95,7 +95,7 @@ const LoginForm = () => {
           className="w-full flex gap-2 items-center justify-center"
           onClick={handleGoogleLogin}
         >
-          <Google size={20} />
+          <Mail size={20} />
           Continuar con Google
         </Button>
 
