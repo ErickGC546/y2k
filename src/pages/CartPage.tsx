@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Trash2, ShoppingBag, ChevronLeft, ChevronRight, CreditCard, Building2, QrCode } from 'lucide-react';
@@ -11,7 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 const CartPage: React.FC = () => {
   const navigate = useNavigate();
-  const { cartItems, removeFromCart, updateQuantity, getTotalPrice, getTotalItems, clearCart } = useCart();
+  const { cartItems, removeFromCart, updateQuantity, getTotalPrice, getTotalItems } = useCart();
   const [paymentProcessing, setPaymentProcessing] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -54,7 +53,7 @@ const CartPage: React.FC = () => {
     );
   }
 
-  const handlePaymentProcess = () => {
+  const handlePaymentProcess = async () => {
     if (!isAuthenticated) {
       toast.error("Debes iniciar sesión para realizar la compra");
       navigate('/iniciar-sesion');
@@ -62,12 +61,36 @@ const CartPage: React.FC = () => {
     }
 
     setPaymentProcessing(true);
-    
-    // Simulate payment processing
-    setTimeout(() => {
-      toast.error("Sistema de pagos en mantenimiento. Próximamente disponible.");
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      const response = await supabase.functions.invoke('create-checkout', {
+        body: {
+          items: cartItems.map(item => ({
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity,
+            image: item.image,
+          })),
+          success_url: `${window.location.origin}/payment-success`,
+          cancel_url: `${window.location.origin}/carrito`,
+        },
+      });
+
+      if (response.error) {
+        throw new Error(response.error.message);
+      }
+
+      if (response.data?.url) {
+        window.location.href = response.data.url;
+      } else {
+        throw new Error("No se pudo crear la sesión de pago");
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Error al procesar el pago");
       setPaymentProcessing(false);
-    }, 2000);
+    }
   };
 
   return (
@@ -188,7 +211,7 @@ const CartPage: React.FC = () => {
               ) : paymentProcessing ? (
                 <div className="flex items-center">
                   <div className="animate-spin mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
-                  Procesando...
+                  Procesando pago...
                 </div>
               ) : (
                 'Proceder al pago'
