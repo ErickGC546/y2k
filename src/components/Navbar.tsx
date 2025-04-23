@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingBag, User, Search, Menu, X } from 'lucide-react';
@@ -138,10 +139,12 @@ const Navbar = () => {
               >
                 <Search />
               </button>
-              <Link to="/mi-cuenta" className="flex flex-col items-center">
-                <User size={20} />
-                <span className="text-xs mt-1">Mi Cuenta</span>
-              </Link>
+              {isAuthenticated && (
+                <Link to="/mi-cuenta" className="flex flex-col items-center">
+                  <User size={20} />
+                  <span className="text-xs mt-1">Mi Cuenta</span>
+                </Link>
+              )}
               <Link to="/carrito" className="flex flex-col items-center relative">
                 <ShoppingBag size={20} />
                 <span className="absolute -top-2 -right-2 bg-estilo-gold text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">

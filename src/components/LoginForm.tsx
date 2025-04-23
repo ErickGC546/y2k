@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -41,18 +42,62 @@ const LoginForm = () => {
   const onSubmit = async (values: FormValues) => {
     setIsLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      // Intentamos iniciar sesión con email/password
+      const { error: signInError } = await supabase.auth.signInWithPassword({
         email: values.email,
         password: values.password,
       });
 
-      if (error) throw error;
+      // Si hay un error específico de email no confirmado
+      if (signInError && signInError.message.includes('Email not confirmed')) {
+        // Enviamos un nuevo email de confirmación
+        const { error: resendError } = await supabase.auth.resend({
+          type: 'signup',
+          email: values.email,
+        });
 
-      toast({
-        title: "Inicio de sesión exitoso",
-        description: "Bienvenido a Y2K Store",
-      });
-      navigate('/');
+        if (resendError) {
+          toast({
+            title: "Error al reenviar el correo de confirmación",
+            description: resendError.message,
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Correo de confirmación enviado",
+            description: "Por favor revisa tu correo para confirmar tu cuenta",
+          });
+        }
+        
+        // Intentamos iniciar sesión de todos modos (esto funcionará si se desactiva la verificación de correo)
+        const { error: forceSignInError } = await supabase.auth.signInWithPassword({
+          email: values.email,
+          password: values.password,
+        });
+        
+        if (!forceSignInError) {
+          toast({
+            title: "Inicio de sesión exitoso",
+            description: "Bienvenido a Y2K Store",
+          });
+          navigate('/');
+          return;
+        }
+      } else if (signInError) {
+        // Otros errores de inicio de sesión
+        toast({
+          title: "Error al iniciar sesión",
+          description: signInError.message,
+          variant: "destructive",
+        });
+      } else {
+        // Inicio de sesión exitoso
+        toast({
+          title: "Inicio de sesión exitoso",
+          description: "Bienvenido a Y2K Store",
+        });
+        navigate('/');
+      }
     } catch (error: any) {
       toast({
         title: "Error al iniciar sesión",
