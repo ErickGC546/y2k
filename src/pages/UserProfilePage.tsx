@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -15,6 +14,8 @@ import {
   DialogFooter,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import UserAddresses from '../components/UserAddresses';
+import AddAddressDialog from '../components/AddAddressDialog';
 
 const UserProfilePage: React.FC = () => {
   const { toast } = useToast();
@@ -30,6 +31,8 @@ const UserProfilePage: React.FC = () => {
   const [address, setAddress] = useState('');
   const [passwordOpen, setPasswordOpen] = useState(false);
   const [newPassword, setNewPassword] = useState('');
+  // Estados para añadir dirección
+  const [refreshAddresses, setRefreshAddresses] = useState(false);
 
   useEffect(() => {
     const getProfile = async () => {
@@ -202,47 +205,15 @@ const UserProfilePage: React.FC = () => {
               {/* Direcciones */}
               <div className="p-6 border-b border-gray-200">
                 <h2 className="text-xl font-semibold mb-2">Direcciones guardadas</h2>
-                <p className="text-gray-600">No tienes direcciones guardadas.</p>
-                <Dialog open={addressOpen} onOpenChange={setAddressOpen}>
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className="mt-4 text-estilo-gold border-estilo-gold hover:bg-estilo-gold hover:text-white"
-                    >
-                      Añadir dirección
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Añadir dirección</DialogTitle>
-                      <DialogDescription>
-                        Ingresa tu nueva dirección. (Esta demo no guarda realmente, contáctame si necesitas almacenamiento real)
-                      </DialogDescription>
-                    </DialogHeader>
-                    <form onSubmit={handleAddAddress} className="space-y-4 py-2">
-                      <input
-                        type="text"
-                        className="w-full border px-3 py-2 rounded"
-                        placeholder="Dirección"
-                        value={address}
-                        onChange={e => setAddress(e.target.value)}
-                        disabled={loading}
-                      />
-                      <DialogFooter>
-                        <Button type="submit" disabled={loading}>
-                          Guardar
-                        </Button>
-                        <Button
-                          variant="outline"
-                          type="button"
-                          onClick={() => setAddressOpen(false)}
-                        >
-                          Cancelar
-                        </Button>
-                      </DialogFooter>
-                    </form>
-                  </DialogContent>
-                </Dialog>
+                <UserAddresses
+                  onAddAddress={() => setAddressOpen(true)}
+                  refreshFlag={refreshAddresses}
+                />
+                <AddAddressDialog
+                  open={addressOpen}
+                  onOpenChange={(open) => setAddressOpen(open)}
+                  onAdded={() => setRefreshAddresses(flag => !flag)}
+                />
               </div>
               {/* Seguridad */}
               <div className="p-6">
