@@ -36,23 +36,27 @@ serve(async (req) => {
       apiVersion: "2023-10-16",
     });
 
-    // Create Stripe checkout session
+    // Create Stripe checkout session - Usar soles peruanos "PEN"
     const session = await stripe.checkout.sessions.create({
       customer_email: user.email,
       line_items: items.map((item: any) => ({
         price_data: {
-          currency: "usd",
+          currency: "pen",
           product_data: {
             name: item.name,
             images: [item.image],
           },
-          unit_amount: Math.round(item.price * 100), // Convert to cents
+          unit_amount: Math.round(item.price * 100), // el precio debe estar en centavos de soles
         },
         quantity: item.quantity,
       })),
       mode: "payment",
       success_url: success_url,
       cancel_url: cancel_url,
+      // Puedes restringir métodos de pago habilitando sólo lo que quieras en el dashboard de Stripe
+      // Si quieres forzar sólo tarjetas: payment_method_types: ["card"],
+      payment_method_types: ["card"],
+      locale: "es-PE",
     });
 
     return new Response(
