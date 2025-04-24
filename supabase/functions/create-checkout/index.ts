@@ -36,7 +36,7 @@ serve(async (req) => {
       apiVersion: "2023-10-16",
     });
 
-    // Create Stripe checkout session - Usar soles peruanos "PEN"
+    // Create Stripe checkout session configurado para Perú
     const session = await stripe.checkout.sessions.create({
       customer_email: user.email,
       line_items: items.map((item: any) => ({
@@ -53,10 +53,14 @@ serve(async (req) => {
       mode: "payment",
       success_url: success_url,
       cancel_url: cancel_url,
-      // Puedes restringir métodos de pago habilitando sólo lo que quieras en el dashboard de Stripe
-      // Si quieres forzar sólo tarjetas: payment_method_types: ["card"],
-      payment_method_types: ["card"],
-      locale: "es-PE",
+      payment_method_types: ["card"], // Solo permitir tarjetas
+      locale: "es-PE", // Idioma español Perú
+      payment_method_options: {
+        card: {
+          // Restringir a tarjetas emitidas en Perú
+          allowed_countries: ["PE"]
+        }
+      }
     });
 
     return new Response(
@@ -76,3 +80,4 @@ serve(async (req) => {
     );
   }
 });
+
