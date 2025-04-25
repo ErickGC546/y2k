@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, CreditCard, Clock, Truck, Instagram, Facebook, Twitter, MessageCircle } from 'lucide-react';
+import { Mail, Phone, MapPin, CreditCard, Clock, Truck, Instagram, MessageCircle } from 'lucide-react';
+
 
 const Footer = () => {
   return (
@@ -39,13 +40,7 @@ const Footer = () => {
             </p>
             <div className="flex space-x-4 mt-6">
               <a href="#" className="text-gray-400 hover:text-estilo-gold transition-colors">
-                <Facebook size={20} />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-estilo-gold transition-colors">
                 <Instagram size={20} />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-estilo-gold transition-colors">
-                <Twitter size={20} />
               </a>
             </div>
           </div>
@@ -56,8 +51,8 @@ const Footer = () => {
               <li><Link to="/categoria/mujer" className="text-gray-400 hover:text-estilo-gold transition-colors">Mujer</Link></li>
               <li><Link to="/categoria/hombre" className="text-gray-400 hover:text-estilo-gold transition-colors">Hombre</Link></li>
               <li><Link to="/categoria/accesorios" className="text-gray-400 hover:text-estilo-gold transition-colors">Accesorios</Link></li>
-              <li><Link to="/categoria/deportes" className="text-gray-400 hover:text-estilo-gold transition-colors">Deportes</Link></li>
               <li><Link to="/categoria/ofertas" className="text-gray-400 hover:text-estilo-gold transition-colors">Ofertas</Link></li>
+              <li><Link to="/categoria/novedades" className="text-gray-400 hover:text-estilo-gold transition-colors">NOVEDADES</Link></li>
             </ul>
           </div>
 
@@ -87,7 +82,7 @@ const Footer = () => {
               </li>
               <li className="flex items-center">
                 <Mail size={18} className="mr-2 flex-shrink-0 text-estilo-gold" />
-                <a href="mailto:y2kstore@gmail.com" className="text-gray-400 hover:text-estilo-gold transition-colors">y2kstore@gmail.com</a>
+                <a href="mailto:y2kstore@gmail.com" className="text-gray-400 hover:text-estilo-gold transition-colors">y2k@gmail.com</a>
               </li>
               <li className="flex items-center">
                 <MessageCircle size={18} className="mr-2 flex-shrink-0 text-estilo-gold" />
@@ -99,7 +94,7 @@ const Footer = () => {
 
         {/* Copyright */}
         <div className="border-t border-gray-800 mt-10 pt-6 text-center text-sm text-gray-500">
-          <p>&copy; {new Date().getFullYear()} Y2K STORE. Todos los derechos reservados.</p>
+          <p>&copy; {new Date().getFullYear()} Y2K. Todos los derechos reservados.</p>
           <div className="flex justify-center space-x-4 mt-4">
             <Link to="/politicas" className="hover:text-estilo-gold transition-colors">Políticas de privacidad</Link>
             <Link to="/terminos" className="hover:text-estilo-gold transition-colors">Términos y condiciones</Link>

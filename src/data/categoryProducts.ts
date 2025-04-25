@@ -210,32 +210,6 @@ export const productsByCategory: Record<string, Product[]> = {
       slug: 'gafas-sol',
     },
   ],
-  deportes: [
-    {
-      id: 4,
-      name: 'Zapatillas Deportivas',
-      category: 'Deportes',
-      price: 79.99,
-      image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80',
-      slug: 'zapatillas-deportivas',
-    },
-    {
-      id: 15,
-      name: 'Camiseta Técnica',
-      category: 'Deportes',
-      price: 29.99,
-      image: 'https://images.unsplash.com/photo-1606902965551-dce093cda6e7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-      slug: 'camiseta-tecnica',
-    },
-    {
-      id: 20,
-      name: 'Pantalón Deportivo',
-      category: 'Deportes',
-      price: 39.99,
-      image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=840&q=80',
-      slug: 'pantalon-deportivo',
-    },
-  ],
   ofertas: [
     {
       id: 3,
@@ -324,7 +298,6 @@ export const categoryNames: Record<string, string> = {
   mujer: 'Mujer',
   hombre: 'Hombre',
   accesorios: 'Accesorios',
-  deportes: 'Deportes',
   ofertas: 'Ofertas',
   novedades: 'Novedades',
   primavera: 'Colección Primavera',
