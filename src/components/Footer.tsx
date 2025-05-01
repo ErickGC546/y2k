@@ -34,7 +34,7 @@ const Footer = () => {
         {/* Main footer content */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="mb-6 md:mb-0">
-            <h2 className="text-xl font-bold font-montserrat text-estilo-gold mb-4">Y2K STORE</h2>
+            <h2 className="text-xl font-bold font-montserrat text-estilo-gold mb-4">Y2K</h2>
             <p className="text-sm text-gray-400 mb-4">
               Tu destino para moda exclusiva y de alta calidad. Encuentra las últimas tendencias y clásicos atemporales.
             </p>
@@ -82,7 +82,7 @@ const Footer = () => {
               </li>
               <li className="flex items-center">
                 <Mail size={18} className="mr-2 flex-shrink-0 text-estilo-gold" />
-                <a href="mailto:y2kstore@gmail.com" className="text-gray-400 hover:text-estilo-gold transition-colors">y2k@gmail.com</a>
+                <a href="mailto:y2kstore@gmail.com" className="text-gray-400 hover:text-estilo-gold transition-colors">jaelmtperez@gmail.com</a>
               </li>
               <li className="flex items-center">
                 <MessageCircle size={18} className="mr-2 flex-shrink-0 text-estilo-gold" />

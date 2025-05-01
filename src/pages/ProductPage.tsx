@@ -5,38 +5,7 @@ import Footer from '../components/Footer';
 import { ArrowLeft, ShoppingBag, Heart } from 'lucide-react';
 import { Product } from '../components/ProductCard';
 import { useCart } from '../contexts/CartContext';
-
-// Mock data - using the same products as in CategoryPage
-const products: Product[] = [
-  {
-    id: 1,
-    name: 'Vestido Floral de Verano',
-    category: 'Mujer',
-    price: 49.99,
-    image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=720&q=80',
-    isNew: true,
-    slug: 'vestido-floral-verano',
-  },
-  {
-    id: 2,
-    name: 'Camisa Oxford Azul',
-    category: 'Hombre',
-    price: 39.99,
-    image: 'https://images.unsplash.com/photo-1589310243389-96a5483213a8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-    slug: 'camisa-oxford-azul',
-  },
-  {
-    id: 3,
-    name: 'Chaqueta de Cuero',
-    category: 'Hombre',
-    price: 129.99,
-    originalPrice: 159.99,
-    image: 'https://images.unsplash.com/photo-1520975954732-35dd22299614?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-    badge: 'OFERTA',
-    slug: 'chaqueta-cuero',
-  },
-  // We'll assume more products exist but we'll redirect to 404 if the product is not found
-];
+import { productsByCategory } from '../data/categoryProducts'; // Importamos los datos
 
 const ProductPage: React.FC = () => {
   const { productSlug } = useParams<{ productSlug: string }>();
@@ -44,8 +13,11 @@ const ProductPage: React.FC = () => {
   const [quantity, setQuantity] = useState(1);
   const [size, setSize] = useState('m');
   
+  // Obtenemos todos los productos de todas las categorías
+  const allProducts = Object.values(productsByCategory).flat();
+  
   // Find the product by slug
-  const product = products.find(p => p.slug === productSlug);
+  const product = allProducts.find(p => p.slug === productSlug);
   
   // If product not found, show a proper message
   if (!product) {
@@ -124,9 +96,9 @@ const ProductPage: React.FC = () => {
               
               <div className="border-t border-b border-gray-200 py-6 mb-6">
                 <p className="text-gray-700 mb-4">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nisl eget ultricies tincidunt, 
-                  nisl nisl aliquam nisl, eget aliquam nisl nisl eget nisl. Nullam auctor, nisl eget ultricies tincidunt, 
-                  nisl nisl aliquam nisl, eget aliquam nisl nisl eget nisl.
+                  Diseñada para brindarte comodidad y estilo, esta prenda combina materiales de alta calidad con un corte moderno que se adapta 
+                  perfectamente a tu día a día. Ideal para cualquier ocasión, su diseño versátil permite combinarla fácilmente con otras piezas 
+                  de tu armario. Su confección cuidadosa garantiza durabilidad, suavidad al tacto y un ajuste cómodo.
                 </p>
                 
                 <ul className="list-disc pl-5 text-gray-700">

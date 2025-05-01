@@ -68,7 +68,7 @@ interface FeaturedProductsProps {
 
 const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ 
   title = "Productos Destacados", 
-  viewAllLink = "/productos", 
+  viewAllLink = "/categoria/ofertas", 
   limit = 8 
 }) => {
   return (
