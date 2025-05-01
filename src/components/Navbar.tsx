@@ -94,7 +94,7 @@ const Navbar = () => {
       <div className="bg-estilo-dark text-white py-3 px-4 border-t border-gray-800">
         <div className="container mx-auto flex justify-between items-center">
           {/* Logo */}
-          <Link to="/" className="block w-auto h-10">
+          <Link to="/" className="block w-auto h-12">
             <img src={logo} alt="Y2K Logo" className="h-full object-contain" />
           </Link>
 
