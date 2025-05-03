@@ -51,11 +51,6 @@ const Navbar = () => {
       {/* Top bar with policies and social */}
       <div className="bg-estilo-dark text-white py-2 px-4">
         <div className="container mx-auto flex justify-between items-center text-xs">
-          <div className="hidden md:block">
-            <Link to="/politicas" className="mr-4 hover:text-estilo-gold transition-colors">
-              Políticas y condiciones de uso
-            </Link>
-          </div>
           <div className="flex items-center space-x-4 ml-auto">
             {isAuthenticated ? (
               <>
