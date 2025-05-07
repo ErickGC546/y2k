@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Trash2, ShoppingBag, ChevronLeft, ChevronRight, CreditCard, Building2, QrCode } from 'lucide-react';
@@ -7,12 +8,14 @@ import { useCart } from '../contexts/CartContext';
 import { Button } from '../components/ui/button';
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 const CartPage: React.FC = () => {
   const navigate = useNavigate();
   const { cartItems, removeFromCart, updateQuantity, getTotalPrice, getTotalItems } = useCart();
   const [paymentProcessing, setPaymentProcessing] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
 
   useEffect(() => {
     // Check authentication status when component mounts
@@ -61,10 +64,9 @@ const CartPage: React.FC = () => {
     }
 
     setPaymentProcessing(true);
+    setPaymentError(null);
 
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      
       const response = await supabase.functions.invoke('create-checkout', {
         body: {
           items: cartItems.map(item => ({
@@ -78,8 +80,10 @@ const CartPage: React.FC = () => {
         },
       });
 
+      console.log("Checkout response:", response);
+
       if (response.error) {
-        throw new Error(response.error.message);
+        throw new Error(response.error.message || "Error al procesar el pago");
       }
 
       if (response.data?.url) {
@@ -88,7 +92,10 @@ const CartPage: React.FC = () => {
         throw new Error("No se pudo crear la sesión de pago");
       }
     } catch (error: any) {
-      toast.error(error.message || "Error al procesar el pago");
+      console.error("Payment error:", error);
+      const errorMessage = error.message || "Error al procesar el pago";
+      setPaymentError(errorMessage);
+      toast.error(errorMessage);
       setPaymentProcessing(false);
     }
   };
@@ -98,6 +105,13 @@ const CartPage: React.FC = () => {
       <Navbar />
       <main className="flex-grow container mx-auto px-4 py-8">
         <h1 className="text-2xl font-bold mb-8 font-montserrat">Mi Bolsa ({getTotalItems()} {getTotalItems() === 1 ? 'producto' : 'productos'})</h1>
+        
+        {paymentError && (
+          <Alert variant="destructive" className="mb-6">
+            <AlertTitle>Error de pago</AlertTitle>
+            <AlertDescription>{paymentError}</AlertDescription>
+          </Alert>
+        )}
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cart items section */}
@@ -184,11 +198,11 @@ const CartPage: React.FC = () => {
               <div className="grid grid-cols-2 gap-3">
                 <div className="border rounded p-3 text-center text-sm">
                   <CreditCard className="mx-auto mb-1 h-5 w-5" />
-                  <span className="block text-xs">Tarjetas</span>
+                  <span className="block text-xs">Tarjetas peruanas</span>
                 </div>
                 <div className="border rounded p-3 text-center text-sm">
                   <Building2 className="mx-auto mb-1 h-5 w-5" />
-                  <span className="block text-xs">Bancos</span>
+                  <span className="block text-xs">Bancos peruanos</span>
                 </div>
                 <div className="border rounded p-3 text-center text-sm">
                   <QrCode className="mx-auto mb-1 h-5 w-5" />

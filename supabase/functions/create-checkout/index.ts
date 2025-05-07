@@ -9,13 +9,21 @@ const corsHeaders = {
 };
 
 serve(async (req) => {
+  // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { items, success_url, cancel_url } = await req.json();
+    const requestData = await req.json();
+    const { items, success_url, cancel_url } = requestData;
     
+    if (!items || !items.length || !success_url || !cancel_url) {
+      console.error("Invalid request data:", JSON.stringify(requestData));
+      throw new Error("Datos de solicitud inválidos");
+    }
+    
+    // Initialize Supabase client
     const supabaseClient = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
       Deno.env.get("SUPABASE_ANON_KEY") ?? ""
@@ -24,19 +32,33 @@ serve(async (req) => {
     // Get authenticated user
     const authHeader = req.headers.get("Authorization")!;
     const token = authHeader.replace("Bearer ", "");
-    const { data } = await supabaseClient.auth.getUser(token);
+    const { data, error } = await supabaseClient.auth.getUser(token);
+    
+    if (error || !data.user) {
+      console.error("Authentication error:", error);
+      throw new Error("Usuario no autenticado");
+    }
+    
     const user = data.user;
     
     if (!user?.email) {
-      throw new Error("Usuario no autenticado");
+      throw new Error("El correo del usuario no está disponible");
     }
 
     // Initialize Stripe
-    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
+    const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
+    if (!stripeKey) {
+      console.error("Missing Stripe secret key");
+      throw new Error("Error de configuración: falta clave de Stripe");
+    }
+    
+    const stripe = new Stripe(stripeKey, {
       apiVersion: "2023-10-16",
     });
 
-    // Create Stripe checkout session configurado para Perú
+    console.log("Creating checkout session for user:", user.email);
+
+    // Create Stripe checkout session configured for Peru
     const session = await stripe.checkout.sessions.create({
       customer_email: user.email,
       line_items: items.map((item: any) => ({
@@ -44,7 +66,7 @@ serve(async (req) => {
           currency: "pen",
           product_data: {
             name: item.name,
-            images: [item.image],
+            images: item.image ? [item.image] : [],
           },
           unit_amount: Math.round(item.price * 100), // el precio debe estar en centavos de soles
         },
@@ -63,6 +85,8 @@ serve(async (req) => {
       }
     });
 
+    console.log("Checkout session created successfully:", session.id);
+
     return new Response(
       JSON.stringify({ url: session.url }),
       {
@@ -71,8 +95,10 @@ serve(async (req) => {
       }
     );
   } catch (error) {
+    console.error("Error creating checkout session:", error);
+    
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error.message || "Error al crear la sesión de pago" }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 400,
@@ -80,4 +106,3 @@ serve(async (req) => {
     );
   }
 });
-
