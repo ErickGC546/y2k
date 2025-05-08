@@ -44,7 +44,7 @@ const featuredProducts: Product[] = [
     id: 8,
     name: 'Gorra 9Fifty Metallic',
     category: 'Accesorios',
-    price: 60.00,
+    price: 65.90,
     image: 'https://img.sombreroshop.es/Gorra-9Fifty-Metallic-Arch-Yankees-by-New-Era.67618_pf4.jpg?_gl=1*1ya6x5h*_ga*NDk4MTI0Njc1LjE3NDYwNzgwNzU.*_ga_B7FCYF3ZVR*MTc0NjA3ODA3NC4xLjAuMTc0NjA3ODA3OC4wLjAuMTQ2MTg3NzA2*_fplc*ckR4ejlYa0QxTCUyRkw3WDJzN1prS2gxUUZlRjd1VVIzNEVkSExVVFRYdGpMSGc0TFQxbmFyenFTQVBYS2xPZjVTOVE5Y1AwJTJGQWZ0dUhGVWJsaUFTS1lFT0hjbEFRY1IzNXlLRk9zMHNQdEF5QWVQS2ZBQmwwa21iaFJva3hQdyUzRCUzRA..*_gcl_au*MTQyMDEwODE5OC4xNzQ2MDc4MDc5*FPAU*MTQyMDEwODE5OC4xNzQ2MDc4MDc5',
     isNew: true,
     slug: 'gorra-fifty',

@@ -65,7 +65,7 @@ const PaymentSuccessPage: React.FC = () => {
             )}
             
             <p className="text-gray-600 mb-8">
-              Tu pago ha sido procesado exitosamente. Recibirás una confirmación por correo electrónico con los detalles de tu pedido.
+              Tu pago ha sido procesado exitosamente.
             </p>
             
             <div className="space-y-4 mb-6">
@@ -81,11 +81,6 @@ const PaymentSuccessPage: React.FC = () => {
                   Volver a la tienda
                 </Button>
               </Link>
-              <div>
-                <Link to="/mi-cuenta" className="text-sm text-gray-600 hover:underline">
-                  Ver mis pedidos
-                </Link>
-              </div>
             </div>
           </div>
         </div>
