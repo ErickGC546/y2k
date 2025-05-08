@@ -1,7 +1,6 @@
 
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
-import { MercadoPagoConfig, Preference } from "https://esm.sh/mercadopago@2.0.10";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -52,9 +51,6 @@ serve(async (req) => {
       throw new Error("Error de configuración: falta token de MercadoPago");
     }
     
-    const client = new MercadoPagoConfig({ accessToken: mercadoPagoKey });
-    const preference = new Preference(client);
-
     console.log("Creating MercadoPago checkout for user:", user.email);
 
     // Format items for MercadoPago
@@ -67,28 +63,42 @@ serve(async (req) => {
       picture_url: item.image || undefined
     }));
 
-    // Create MercadoPago preference
-    const preferenceData = {
-      items: mercadoPagoItems,
-      back_urls: {
-        success: success_url,
-        failure: cancel_url,
-        pending: cancel_url
+    // Instead of using the SDK which has compatibility issues in Deno,
+    // we'll create the preference using the MercadoPago API directly
+    const response = await fetch("https://api.mercadopago.com/checkout/preferences", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${mercadoPagoKey}`
       },
-      auto_return: "approved",
-      payer: {
-        email: user.email,
-      },
-      payment_methods: {
-        excluded_payment_types: [],
-        installments: 1
-      },
-      statement_descriptor: "Estilo Afro",
-      external_reference: user.id
-    };
+      body: JSON.stringify({
+        items: mercadoPagoItems,
+        back_urls: {
+          success: success_url,
+          failure: cancel_url,
+          pending: cancel_url
+        },
+        auto_return: "approved",
+        payer: {
+          email: user.email,
+        },
+        payment_methods: {
+          excluded_payment_types: [],
+          installments: 1
+        },
+        statement_descriptor: "Estilo Afro",
+        external_reference: user.id
+      })
+    });
 
-    const result = await preference.create({ body: preferenceData });
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("MercadoPago API error:", response.status, errorText);
+      throw new Error(`Error de MercadoPago: ${response.status} ${errorText}`);
+    }
 
+    const result = await response.json();
+    
     console.log("MercadoPago preference created successfully:", result.id);
 
     return new Response(
