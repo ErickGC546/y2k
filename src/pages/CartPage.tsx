@@ -70,6 +70,7 @@ const CartPage: React.FC = () => {
       const response = await supabase.functions.invoke('create-checkout', {
         body: {
           items: cartItems.map(item => ({
+            id: item.id,
             name: item.name,
             price: item.price,
             quantity: item.quantity,
@@ -198,11 +199,11 @@ const CartPage: React.FC = () => {
               <div className="grid grid-cols-2 gap-3">
                 <div className="border rounded p-3 text-center text-sm">
                   <CreditCard className="mx-auto mb-1 h-5 w-5" />
-                  <span className="block text-xs">Tarjetas peruanas</span>
+                  <span className="block text-xs">Tarjetas</span>
                 </div>
                 <div className="border rounded p-3 text-center text-sm">
                   <Building2 className="mx-auto mb-1 h-5 w-5" />
-                  <span className="block text-xs">Bancos peruanos</span>
+                  <span className="block text-xs">Transferencia bancaria</span>
                 </div>
                 <div className="border rounded p-3 text-center text-sm">
                   <QrCode className="mx-auto mb-1 h-5 w-5" />
@@ -237,10 +238,9 @@ const CartPage: React.FC = () => {
             </p>
             
             <div className="mt-6 text-center">
-              <p className="text-xs text-gray-500">Pago seguro garantizado</p>
+              <p className="text-xs text-gray-500">Pago seguro garantizado con Mercado Pago</p>
               <div className="flex justify-center gap-2 mt-2">
-                <img src="https://www.visa.com.pe/dam/VCOM/regional/lac/SPA/Default/Pay%20With%20Visa/Find%20a%20Card/Tarjetas-Visa.png" alt="Visa" className="h-6" />
-                <img src="https://www.mastercard.com.pe/content/dam/public/mastercardcom/lac/pe/home/consumidores/encontrar-tarjeta/tarjetas-credito/black-1280x720.png" alt="Mastercard" className="h-6" />
+                <img src="https://http2.mlstatic.com/frontend-assets/mp-web-navigation/planning/teal/logo-2.svg" alt="Mercado Pago" className="h-8" />
               </div>
             </div>
           </div>

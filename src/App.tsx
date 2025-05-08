@@ -13,6 +13,7 @@ import RegisterPage from "./pages/RegisterPage";
 import RecoverPasswordPage from "./pages/RecoverPasswordPage";
 import UserProfilePage from "./pages/UserProfilePage";
 import CartPage from "./pages/CartPage";
+import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 import { CartProvider } from "./contexts/CartContext";
 
 const queryClient = new QueryClient();
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/recuperar-password" element={<RecoverPasswordPage />} />
             <Route path="/mi-cuenta" element={<UserProfilePage />} />
             <Route path="/carrito" element={<CartPage />} />
+            <Route path="/payment-success" element={<PaymentSuccessPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

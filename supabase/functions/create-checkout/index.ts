@@ -1,7 +1,7 @@
 
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import Stripe from "https://esm.sh/stripe@14.21.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { MercadoPagoConfig, Preference } from "https://esm.sh/mercadopago@2.0.10";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -45,57 +45,61 @@ serve(async (req) => {
       throw new Error("El correo del usuario no está disponible");
     }
 
-    // Initialize Stripe
-    const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
-    if (!stripeKey) {
-      console.error("Missing Stripe secret key");
-      throw new Error("Error de configuración: falta clave de Stripe");
+    // Initialize MercadoPago
+    const mercadoPagoKey = Deno.env.get("MERCADOPAGO_ACCESS_TOKEN");
+    if (!mercadoPagoKey) {
+      console.error("Missing MercadoPago access token");
+      throw new Error("Error de configuración: falta token de MercadoPago");
     }
     
-    const stripe = new Stripe(stripeKey, {
-      apiVersion: "2023-10-16",
-    });
+    const client = new MercadoPagoConfig({ accessToken: mercadoPagoKey });
+    const preference = new Preference(client);
 
-    console.log("Creating checkout session for user:", user.email);
+    console.log("Creating MercadoPago checkout for user:", user.email);
 
-    // Create Stripe checkout session configured for Peru
-    const session = await stripe.checkout.sessions.create({
-      customer_email: user.email,
-      line_items: items.map((item: any) => ({
-        price_data: {
-          currency: "pen",
-          product_data: {
-            name: item.name,
-            images: item.image ? [item.image] : [],
-          },
-          unit_amount: Math.round(item.price * 100), // el precio debe estar en centavos de soles
-        },
-        quantity: item.quantity,
-      })),
-      mode: "payment",
-      success_url: success_url,
-      cancel_url: cancel_url,
-      payment_method_types: ["card"], // Solo permitir tarjetas
-      locale: "es-PE", // Idioma español Perú
-      payment_method_options: {
-        card: {
-          // Restringir a tarjetas emitidas en Perú
-          allowed_countries: ["PE"]
-        }
-      }
-    });
+    // Format items for MercadoPago
+    const mercadoPagoItems = items.map((item: any) => ({
+      id: String(item.id),
+      title: item.name,
+      quantity: item.quantity,
+      unit_price: item.price,
+      currency_id: "PEN", // Soles peruanos
+      picture_url: item.image || undefined
+    }));
 
-    console.log("Checkout session created successfully:", session.id);
+    // Create MercadoPago preference
+    const preferenceData = {
+      items: mercadoPagoItems,
+      back_urls: {
+        success: success_url,
+        failure: cancel_url,
+        pending: cancel_url
+      },
+      auto_return: "approved",
+      payer: {
+        email: user.email,
+      },
+      payment_methods: {
+        excluded_payment_types: [],
+        installments: 1
+      },
+      statement_descriptor: "Estilo Afro",
+      external_reference: user.id
+    };
+
+    const result = await preference.create({ body: preferenceData });
+
+    console.log("MercadoPago preference created successfully:", result.id);
 
     return new Response(
-      JSON.stringify({ url: session.url }),
+      JSON.stringify({ url: result.init_point }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 200,
       }
     );
   } catch (error) {
-    console.error("Error creating checkout session:", error);
+    console.error("Error creating MercadoPago checkout:", error);
     
     return new Response(
       JSON.stringify({ error: error.message || "Error al crear la sesión de pago" }),
