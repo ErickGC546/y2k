@@ -11,6 +11,7 @@ interface AddressMapProps {
   readOnly?: boolean;
 }
 
+// Add Google Maps API type definitions
 declare global {
   interface Window {
     google: any;
@@ -20,9 +21,9 @@ declare global {
 
 const AddressMap: React.FC<AddressMapProps> = ({ address, onSelectLocation, readOnly = false }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<google.maps.Map | null>(null);
-  const marker = useRef<google.maps.Marker | null>(null);
-  const geocoder = useRef<google.maps.Geocoder | null>(null);
+  const map = useRef<any>(null);
+  const marker = useRef<any>(null);
+  const geocoder = useRef<any>(null);
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [googleMapsLoaded, setGoogleMapsLoaded] = useState(false);
@@ -54,12 +55,12 @@ const AddressMap: React.FC<AddressMapProps> = ({ address, onSelectLocation, read
   useEffect(() => {
     if (!googleMapsLoaded || !mapContainer.current) return;
     
-    geocoder.current = new google.maps.Geocoder();
+    geocoder.current = new window.google.maps.Geocoder();
     
     // Coordenadas por defecto (Lima, Perú)
     const defaultPosition = { lat: -12.04, lng: -77.03 };
     
-    map.current = new google.maps.Map(mapContainer.current, {
+    map.current = new window.google.maps.Map(mapContainer.current, {
       zoom: 12,
       center: defaultPosition,
       mapTypeControl: false,
@@ -67,12 +68,12 @@ const AddressMap: React.FC<AddressMapProps> = ({ address, onSelectLocation, read
       fullscreenControl: true,
     });
     
-    marker.current = new google.maps.Marker({
+    marker.current = new window.google.maps.Marker({
       position: defaultPosition,
       map: map.current,
       draggable: !readOnly,
       icon: {
-        path: google.maps.SymbolPath.CIRCLE,
+        path: window.google.maps.SymbolPath.CIRCLE,
         scale: 10,
         fillColor: "#C9A96F",
         fillOpacity: 1,
@@ -83,7 +84,7 @@ const AddressMap: React.FC<AddressMapProps> = ({ address, onSelectLocation, read
     
     if (!readOnly && marker.current) {
       // Evento de arrastrar el marcador
-      google.maps.event.addListener(marker.current, 'dragend', () => {
+      window.google.maps.event.addListener(marker.current, 'dragend', () => {
         if (marker.current && onSelectLocation) {
           const position = marker.current.getPosition();
           const lat = position?.lat() || 0;
@@ -105,7 +106,7 @@ const AddressMap: React.FC<AddressMapProps> = ({ address, onSelectLocation, read
     if (!geocoder.current) return;
     
     setLoading(true);
-    geocoder.current.geocode({ address: searchAddress }, (results, status) => {
+    geocoder.current.geocode({ address: searchAddress }, (results: any, status: string) => {
       setLoading(false);
       
       if (status === "OK" && results && results[0]) {
@@ -128,7 +129,7 @@ const AddressMap: React.FC<AddressMapProps> = ({ address, onSelectLocation, read
     
     const latlng = { lat, lng };
     
-    geocoder.current.geocode({ location: latlng }, (results, status) => {
+    geocoder.current.geocode({ location: latlng }, (results: any, status: string) => {
       if (status === "OK" && results && results[0]) {
         const address = results[0].formatted_address;
         
