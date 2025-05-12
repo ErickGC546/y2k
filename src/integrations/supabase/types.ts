@@ -11,23 +11,32 @@ export type Database = {
     Tables: {
       addresses: {
         Row: {
+          additional_details: string | null
           address: string
           created_at: string
           id: string
+          latitude: number | null
+          longitude: number | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          additional_details?: string | null
           address: string
           created_at?: string
           id?: string
+          latitude?: number | null
+          longitude?: number | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          additional_details?: string | null
           address?: string
           created_at?: string
           id?: string
+          latitude?: number | null
+          longitude?: number | null
           updated_at?: string
           user_id?: string
         }

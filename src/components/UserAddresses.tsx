@@ -32,12 +32,14 @@ const UserAddresses: React.FC<UserAddressesProps> = ({ onAddAddress, refreshFlag
       .from('addresses')
       .select('id, address, additional_details, latitude, longitude, created_at')
       .order('created_at', { ascending: false });
+    
     if (error) {
       toast({
         title: "Error al cargar las direcciones",
         description: error.message,
         variant: "destructive"
       });
+      setAddresses([]);
     } else if (data) {
       setAddresses(data);
     }
