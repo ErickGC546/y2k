@@ -1,118 +1,147 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
 import { Button } from '@/components/ui/button';
 import { MapPin } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-// Mapbox public token
-const MAPBOX_TOKEN = 'pk.eyJ1IjoiZXN0aWxvYWZybyIsImEiOiJjbHgwZzV4aWkwMzBrMmlvNzkxZ213bWdwIn0.DrUs64GU9eTKGbQ0VrCo5A';
-
+// Interface para las props del componente
 interface AddressMapProps {
   address?: string;
   onSelectLocation?: (address: string, coordinates: [number, number]) => void;
   readOnly?: boolean;
 }
 
+declare global {
+  interface Window {
+    google: any;
+    initMap: () => void;
+  }
+}
+
 const AddressMap: React.FC<AddressMapProps> = ({ address, onSelectLocation, readOnly = false }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
-  const marker = useRef<mapboxgl.Marker | null>(null);
+  const map = useRef<google.maps.Map | null>(null);
+  const marker = useRef<google.maps.Marker | null>(null);
+  const geocoder = useRef<google.maps.Geocoder | null>(null);
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [googleMapsLoaded, setGoogleMapsLoaded] = useState(false);
   
-  // Initialize map
+  // Cargar el API de Google Maps
   useEffect(() => {
-    if (!mapContainer.current) return;
+    if (!window.google || !window.google.maps) {
+      if (!document.getElementById('google-maps-script')) {
+        setLoading(true);
+        const script = document.createElement('script');
+        script.id = 'google-maps-script';
+        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCdMq5I8qg38bC1pTMw7Krl_9U3obXjgWs&libraries=places&callback=initMap`;
+        script.async = true;
+        script.defer = true;
+        
+        window.initMap = () => {
+          setGoogleMapsLoaded(true);
+          setLoading(false);
+        };
+        
+        document.head.appendChild(script);
+      }
+    } else {
+      setGoogleMapsLoaded(true);
+    }
+  }, []);
+  
+  // Inicializar mapa cuando Google Maps API está cargado
+  useEffect(() => {
+    if (!googleMapsLoaded || !mapContainer.current) return;
     
-    mapboxgl.accessToken = MAPBOX_TOKEN;
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/streets-v11',
-      center: [-77.03, -12.04], // Default: Lima, Peru
-      zoom: 12
+    geocoder.current = new google.maps.Geocoder();
+    
+    // Coordenadas por defecto (Lima, Perú)
+    const defaultPosition = { lat: -12.04, lng: -77.03 };
+    
+    map.current = new google.maps.Map(mapContainer.current, {
+      zoom: 12,
+      center: defaultPosition,
+      mapTypeControl: false,
+      streetViewControl: false,
+      fullscreenControl: true,
     });
-
-    // Add navigation controls
-    map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
     
-    // Create marker
-    marker.current = new mapboxgl.Marker({ color: '#C9A96F', draggable: !readOnly })
-      .setLngLat([-77.03, -12.04])
-      .addTo(map.current);
-
-    if (!readOnly) {
-      // Set up dragend event for marker if not read-only
-      marker.current.on('dragend', () => {
+    marker.current = new google.maps.Marker({
+      position: defaultPosition,
+      map: map.current,
+      draggable: !readOnly,
+      icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 10,
+        fillColor: "#C9A96F",
+        fillOpacity: 1,
+        strokeWeight: 2,
+        strokeColor: "#FFFFFF",
+      }
+    });
+    
+    if (!readOnly && marker.current) {
+      // Evento de arrastrar el marcador
+      google.maps.event.addListener(marker.current, 'dragend', () => {
         if (marker.current && onSelectLocation) {
-          const lngLat = marker.current.getLngLat();
-          reverseGeocode(lngLat.lng, lngLat.lat);
+          const position = marker.current.getPosition();
+          const lat = position?.lat() || 0;
+          const lng = position?.lng() || 0;
+          
+          reverseGeocode(lng, lat);
         }
       });
     }
-
-    // Cleanup
-    return () => {
-      if (map.current) {
-        map.current.remove();
-      }
-    };
-  }, [readOnly, onSelectLocation]);
-
-  // If an address is provided, geocode it to show on map
-  useEffect(() => {
-    if (address && map.current) {
-      setLoading(true);
+    
+    // Si hay una dirección proporcionada, geocodificarla
+    if (address) {
       geocodeAddress(address);
     }
-  }, [address]);
-
-  // Geocode address to coordinates
-  const geocodeAddress = async (searchAddress: string) => {
-    try {
-      const response = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(searchAddress)}.json?access_token=${MAPBOX_TOKEN}`
-      );
+  }, [googleMapsLoaded, address, readOnly, onSelectLocation]);
+  
+  // Geocodificar dirección a coordenadas
+  const geocodeAddress = (searchAddress: string) => {
+    if (!geocoder.current) return;
+    
+    setLoading(true);
+    geocoder.current.geocode({ address: searchAddress }, (results, status) => {
+      setLoading(false);
       
-      const data = await response.json();
-      
-      if (data.features && data.features.length > 0) {
-        const [lng, lat] = data.features[0].center;
+      if (status === "OK" && results && results[0]) {
+        const location = results[0].geometry.location;
         
         if (map.current && marker.current) {
-          map.current.flyTo({ center: [lng, lat], zoom: 15 });
-          marker.current.setLngLat([lng, lat]);
+          map.current.setCenter(location);
+          map.current.setZoom(15);
+          marker.current.setPosition(location);
         }
+      } else {
+        console.error("Geocode failed:", status);
       }
-    } catch (error) {
-      console.error('Error geocoding address:', error);
-    } finally {
-      setLoading(false);
-    }
+    });
   };
-
-  // Reverse geocode coordinates to address
-  const reverseGeocode = async (lng: number, lat: number) => {
-    try {
-      const response = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${MAPBOX_TOKEN}`
-      );
-      
-      const data = await response.json();
-      
-      if (data.features && data.features.length > 0) {
-        const place = data.features[0].place_name;
+  
+  // Geocodificación inversa: coordenadas a dirección
+  const reverseGeocode = (lng: number, lat: number) => {
+    if (!geocoder.current) return;
+    
+    const latlng = { lat, lng };
+    
+    geocoder.current.geocode({ location: latlng }, (results, status) => {
+      if (status === "OK" && results && results[0]) {
+        const address = results[0].formatted_address;
         
         if (onSelectLocation) {
-          onSelectLocation(place, [lng, lat]);
+          onSelectLocation(address, [lng, lat]);
         }
+      } else {
+        console.error("Reverse geocoding failed:", status);
       }
-    } catch (error) {
-      console.error('Error reverse geocoding:', error);
-    }
+    });
   };
-
+  
+  // Usar ubicación actual del usuario
   const handleUseCurrentLocation = () => {
     if (navigator.geolocation) {
       setLoading(true);
@@ -121,8 +150,10 @@ const AddressMap: React.FC<AddressMapProps> = ({ address, onSelectLocation, read
           const { longitude, latitude } = position.coords;
           
           if (map.current && marker.current) {
-            map.current.flyTo({ center: [longitude, latitude], zoom: 15 });
-            marker.current.setLngLat([longitude, latitude]);
+            const pos = { lat: latitude, lng: longitude };
+            map.current.setCenter(pos);
+            map.current.setZoom(15);
+            marker.current.setPosition(pos);
           }
           
           reverseGeocode(longitude, latitude);
@@ -152,19 +183,26 @@ const AddressMap: React.FC<AddressMapProps> = ({ address, onSelectLocation, read
       <div 
         ref={mapContainer} 
         className="h-64 w-full rounded-md border border-gray-300 shadow-sm"
-      />
+        style={{ display: loading && !googleMapsLoaded ? "flex" : "block" }}
+      >
+        {loading && !googleMapsLoaded && (
+          <div className="flex items-center justify-center w-full h-full">
+            <p>Cargando mapa...</p>
+          </div>
+        )}
+      </div>
       
       {!readOnly && (
         <div className="flex justify-between items-center">
           <p className="text-sm text-gray-500">
-            Arrastra el pin para seleccionar una ubicación exacta
+            {!loading ? "Arrastra el pin para seleccionar una ubicación exacta" : "Cargando..."}
           </p>
           <Button
             type="button"
             size="sm"
             variant="outline"
             onClick={handleUseCurrentLocation}
-            disabled={loading}
+            disabled={loading || !googleMapsLoaded}
             className="text-estilo-gold border-estilo-gold hover:bg-estilo-gold hover:text-white"
           >
             <MapPin className="mr-2 h-4 w-4" />
