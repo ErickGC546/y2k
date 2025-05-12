@@ -15,7 +15,7 @@ serve(async (req) => {
 
   try {
     const requestData = await req.json();
-    const { items, success_url, cancel_url } = requestData;
+    const { items, success_url, cancel_url, shipping_address } = requestData;
     
     if (!items || !items.length || !success_url || !cancel_url) {
       console.error("Invalid request data:", JSON.stringify(requestData));
@@ -42,6 +42,34 @@ serve(async (req) => {
     
     if (!user?.email) {
       throw new Error("El correo del usuario no está disponible");
+    }
+
+    // If shipping address was provided, save it to the user's addresses
+    if (shipping_address && shipping_address.trim() !== "") {
+      console.log("Saving shipping address:", shipping_address);
+      
+      // Check if the address already exists to avoid duplicates
+      const { data: existingAddresses } = await supabaseClient
+        .from('addresses')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('address', shipping_address)
+        .maybeSingle();
+      
+      if (!existingAddresses) {
+        const { error: addressError } = await supabaseClient
+          .from('addresses')
+          .insert([{ address: shipping_address, user_id: user.id }]);
+          
+        if (addressError) {
+          console.error("Error saving address:", addressError);
+          // Continue with payment process even if address save fails
+        } else {
+          console.log("Address saved successfully");
+        }
+      } else {
+        console.log("Address already exists, skipping save");
+      }
     }
 
     // Initialize MercadoPago
@@ -87,7 +115,13 @@ serve(async (req) => {
           installments: 1
         },
         statement_descriptor: "Estilo Afro",
-        external_reference: user.id
+        external_reference: user.id,
+        // Include shipping address in the payment info
+        shipments: shipping_address ? {
+          receiver_address: {
+            street_name: shipping_address
+          }
+        } : undefined
       })
     });
 
