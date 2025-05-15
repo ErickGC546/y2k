@@ -23,7 +23,7 @@ const slides = [
   },
   {
     id: 3,
-    image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80https://media.boohoo.com/i/boohoo/bmm94988_red_xl?w=537&qlt=default&fmt.jp2.qlt=70&fmt=auto&sm=fit',
+    image: 'https://media.boohoo.com/i/boohoo/bmm94988_red_xl?w=537&qlt=default&fmt.jp2.qlt=70&fmt=auto&sm=fit',
     title: 'COLECCIÓN EXCLUSIVA',
     subtitle: 'Diseños únicos y limitados',
     cta: 'DESCUBRIR',
