@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from '@/components/ui/button';
 import { useToast } from "@/hooks/use-toast";
-import { Trash2, MapPin, Home } from "lucide-react";
+import { Trash2, MapPin, Home, Navigation } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import AddressMap from './AddressMap';
 
@@ -112,6 +112,19 @@ const UserAddresses: React.FC<UserAddressesProps> = ({ onAddAddress, refreshFlag
                         address={addr.address}
                         readOnly={true}
                       />
+                      {addr.latitude && addr.longitude && (
+                        <div className="mt-2">
+                          <a 
+                            href={`https://www.google.com/maps/dir/?api=1&destination=${addr.latitude},${addr.longitude}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center text-sm text-estilo-gold hover:underline"
+                          >
+                            <Navigation className="w-4 h-4 mr-1" />
+                            Cómo llegar
+                          </a>
+                        </div>
+                      )}
                     </div>
                   </AccordionContent>
                 </AccordionItem>

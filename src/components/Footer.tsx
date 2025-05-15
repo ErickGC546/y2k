@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, CreditCard, Clock, Truck, Instagram, MessageCircle } from 'lucide-react';
@@ -40,11 +39,8 @@ const Footer = () => {
               Tu destino para moda exclusiva y de alta calidad. Encuentra las últimas tendencias y clásicos atemporales.
             </p>
             <div className="flex space-x-4 mt-6">
-              <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-estilo-gold transition-colors">
+              <a href="#" className="text-gray-400 hover:text-estilo-gold transition-colors">
                 <Instagram size={20} />
-              </a>
-              <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-estilo-gold transition-colors">
-                <MessageCircle size={20} />
               </a>
             </div>
           </div>
@@ -96,6 +92,7 @@ const Footer = () => {
           </div>
         </div>
 
+        {/* Copyright */}
         <div className="border-t border-gray-800 mt-10 pt-6 text-center text-sm text-gray-500">
           <p>&copy; {new Date().getFullYear()} Y2K. Todos los derechos reservados.</p>
           <div className="flex justify-center space-x-4 mt-4">
