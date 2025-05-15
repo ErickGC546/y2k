@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 const slides = [
   {
     id: 1,
-    image: 'https://oechsle.vteximg.com.br/arquivos/ids/20134200-800-800/2682726.jpg?v=638690454989870000',
+    image: 'https://img.ltwebstatic.com/images3_pi/2024/07/10/a1/1720577934657ce58311f50cb4c47e6235bb19a72d_thumbnail_720x.jpg',
     title: 'NUEVA COLECCIÓN PRIMAVERA',
     subtitle: 'Descubre las últimas tendencias',
     cta: 'COMPRAR AHORA',
@@ -14,7 +14,7 @@ const slides = [
   },
   {
     id: 2,
-    image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80',
+    image: 'https://scontent-lim1-1.cdninstagram.com/v/t51.29350-15/106504958_2942684009187755_5215182681148122901_n.jpg?stp=dst-jpg_e35_p640x640_sh0.08_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0uaW1hZ2VfdXJsZ2VuLjE0NDB4MTgwMC5zZHIuZjI5MzUwLmRlZmF1bHRfaW1hZ2UifQ&_nc_ht=scontent-lim1-1.cdninstagram.com&_nc_cat=111&_nc_oc=Q6cZ2QGWWVWLRpS1IAcqskp2dViqS025nfTypfOT7fywADJPsasd9yncnx0asAyMIfl_10o&_nc_ohc=wFHVXhubVR8Q7kNvwHhdfnk&_nc_gid=SfxSIKRVnRyINe9XwXzm3w&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=MjM0NDc5NzQzNjAwMTUzNjM3MQ%3D%3D.3-ccb7-5&oh=00_AfJ3mHfpuUyWXysVBeScokIJWiQRTxsAVk-03wKTGf4Spg&oe=682B4EBB&_nc_sid=fc8dfb',
     title: '50% DE DESCUENTO',
     subtitle: 'En prendas seleccionadas',
     cta: 'VER OFERTAS',
