@@ -4,7 +4,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Button } from '@/components/ui/button';
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import AddressMap from './AddressMap';
@@ -18,7 +17,6 @@ interface AddAddressDialogProps {
 const AddAddressDialog: React.FC<AddAddressDialogProps> = ({ open, onOpenChange, onAdded }) => {
   const { toast } = useToast();
   const [address, setAddress] = useState('');
-  const [coordinates, setCoordinates] = useState<[number, number] | null>(null);
   const [additionalDetails, setAdditionalDetails] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -42,7 +40,6 @@ const AddAddressDialog: React.FC<AddAddressDialogProps> = ({ open, onOpenChange,
       address,
       user_id,
       additional_details: additionalDetails,
-      ...(coordinates && { latitude: coordinates[1], longitude: coordinates[0] })
     };
 
     const { error } = await supabase.from('addresses').insert([addressData]);
@@ -58,50 +55,34 @@ const AddAddressDialog: React.FC<AddAddressDialogProps> = ({ open, onOpenChange,
     toast({ title: "¡Dirección guardada!" });
     setAddress('');
     setAdditionalDetails('');
-    setCoordinates(null);
     onOpenChange(false);
     onAdded(); // Para refrescar la lista
   };
 
-  const handleLocationSelected = (selectedAddress: string, coords: [number, number]) => {
+  const handleLocationSelected = (selectedAddress: string) => {
     setAddress(selectedAddress);
-    setCoordinates(coords);
   };
 
   const handleClose = () => {
     setAddress('');
     setAdditionalDetails('');
-    setCoordinates(null);
     onOpenChange(false);
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md md:max-w-xl">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Añadir dirección</DialogTitle>
           <DialogDescription>
-            Selecciona tu ubicación en el mapa o escribe tu dirección completa para que podamos entregar tus productos.
+            Ingresa tu dirección completa para que podamos entregar tus productos.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleAddAddress} className="space-y-4 py-2">
           <AddressMap 
             address={address} 
-            onSelectLocation={handleLocationSelected} 
+            onSelectLocation={(selectedAddress) => handleLocationSelected(selectedAddress)} 
           />
-          
-          <div className="space-y-2">
-            <Label htmlFor="address">Dirección</Label>
-            <Input
-              id="address"
-              placeholder="Dirección"
-              value={address}
-              onChange={e => setAddress(e.target.value)}
-              disabled={loading}
-              required
-              className="w-full"
-            />
-          </div>
           
           <div className="space-y-2">
             <Label htmlFor="details">Detalles adicionales (opcional)</Label>

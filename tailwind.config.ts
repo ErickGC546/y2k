@@ -61,7 +61,7 @@ export default {
 					dark: '#000000',
 					light: '#FFFFFF',
 					gray: '#F5F5F5',
-					gold: '#1a5e1a',  // Changed from gold to dark green
+					gold: '#C9A96F',  // Restaurado a color dorado
 				}
 			},
 			borderRadius: {

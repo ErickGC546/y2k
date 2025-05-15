@@ -1,238 +1,51 @@
 
-import React, { useEffect, useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import React from 'react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { MapPin } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
 
-// Interface para las props del componente
+// Componente simplificado que reemplaza el mapa con un campo de entrada
 interface AddressMapProps {
   address?: string;
   onSelectLocation?: (address: string, coordinates: [number, number]) => void;
   readOnly?: boolean;
 }
 
-// Add Google Maps API type definitions
-declare global {
-  interface Window {
-    google: any;
-    initMap: () => void;
-  }
-}
-
 const AddressMap: React.FC<AddressMapProps> = ({ address, onSelectLocation, readOnly = false }) => {
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<any>(null);
-  const marker = useRef<any>(null);
-  const geocoder = useRef<any>(null);
-  const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
-  const [googleMapsLoaded, setGoogleMapsLoaded] = useState(false);
-  const [apiError, setApiError] = useState(false);
   
-  // Cargar el API de Google Maps
-  useEffect(() => {
-    if (!window.google || !window.google.maps) {
-      if (!document.getElementById('google-maps-script')) {
-        setLoading(true);
-        const script = document.createElement('script');
-        script.id = 'google-maps-script';
-        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyBt8_PjyPJ_4UQT2jfI9aiqXvR0GgkHCZE&libraries=places&callback=initMap`;
-        script.async = true;
-        script.defer = true;
-        
-        window.initMap = () => {
-          setGoogleMapsLoaded(true);
-          setLoading(false);
-        };
-
-        // Add error handler
-        script.onerror = () => {
-          setLoading(false);
-          setApiError(true);
-          console.error('Google Maps failed to load');
-          toast({
-            title: "Error",
-            description: "No se pudo cargar Google Maps",
-            variant: "destructive"
-          });
-        };
-        
-        document.head.appendChild(script);
-      }
-    } else {
-      setGoogleMapsLoaded(true);
-    }
-  }, []);
-  
-  // Inicializar mapa cuando Google Maps API está cargado
-  useEffect(() => {
-    if (!googleMapsLoaded || !mapContainer.current) return;
-    
-    try {
-      geocoder.current = new window.google.maps.Geocoder();
-      
-      // Coordenadas por defecto (Lima, Perú)
-      const defaultPosition = { lat: -12.04, lng: -77.03 };
-      
-      map.current = new window.google.maps.Map(mapContainer.current, {
-        zoom: 12,
-        center: defaultPosition,
-        mapTypeControl: false,
-        streetViewControl: false,
-        fullscreenControl: true,
-      });
-      
-      marker.current = new window.google.maps.Marker({
-        position: defaultPosition,
-        map: map.current,
-        draggable: !readOnly,
-        icon: {
-          path: window.google.maps.SymbolPath.CIRCLE,
-          scale: 10,
-          fillColor: "#C9A96F",
-          fillOpacity: 1,
-          strokeWeight: 2,
-          strokeColor: "#FFFFFF",
-        }
-      });
-      
-      if (!readOnly && marker.current) {
-        // Evento de arrastrar el marcador
-        window.google.maps.event.addListener(marker.current, 'dragend', () => {
-          if (marker.current && onSelectLocation) {
-            const position = marker.current.getPosition();
-            const lat = position?.lat() || 0;
-            const lng = position?.lng() || 0;
-            
-            reverseGeocode(lng, lat);
-          }
-        });
-      }
-      
-      // Si hay una dirección proporcionada, geocodificarla
-      if (address) {
-        geocodeAddress(address);
-      }
-    } catch (error) {
-      console.error('Error initializing Google Maps:', error);
-      setApiError(true);
-    }
-  }, [googleMapsLoaded, address, readOnly, onSelectLocation]);
-  
-  // Geocodificar dirección a coordenadas
-  const geocodeAddress = (searchAddress: string) => {
-    if (!geocoder.current) return;
-    
-    setLoading(true);
-    geocoder.current.geocode({ address: searchAddress }, (results: any, status: string) => {
-      setLoading(false);
-      
-      if (status === "OK" && results && results[0]) {
-        const location = results[0].geometry.location;
-        
-        if (map.current && marker.current) {
-          map.current.setCenter(location);
-          map.current.setZoom(15);
-          marker.current.setPosition(location);
-        }
-      } else {
-        console.error("Geocode failed:", status);
-      }
-    });
-  };
-  
-  // Geocodificación inversa: coordenadas a dirección
-  const reverseGeocode = (lng: number, lat: number) => {
-    if (!geocoder.current) return;
-    
-    const latlng = { lat, lng };
-    
-    geocoder.current.geocode({ location: latlng }, (results: any, status: string) => {
-      if (status === "OK" && results && results[0]) {
-        const address = results[0].formatted_address;
-        
-        if (onSelectLocation) {
-          onSelectLocation(address, [lng, lat]);
-        }
-      } else {
-        console.error("Reverse geocoding failed:", status);
-      }
-    });
-  };
-  
-  // Usar ubicación actual del usuario
-  const handleUseCurrentLocation = () => {
-    if (navigator.geolocation) {
-      setLoading(true);
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { longitude, latitude } = position.coords;
-          
-          if (map.current && marker.current) {
-            const pos = { lat: latitude, lng: longitude };
-            map.current.setCenter(pos);
-            map.current.setZoom(15);
-            marker.current.setPosition(pos);
-          }
-          
-          reverseGeocode(longitude, latitude);
-          setLoading(false);
-        },
-        (error) => {
-          console.error('Error getting location:', error);
-          toast({
-            title: "Error",
-            description: "No se pudo obtener tu ubicación actual",
-            variant: "destructive"
-          });
-          setLoading(false);
-        }
-      );
-    } else {
-      toast({
-        title: "Error",
-        description: "Tu navegador no admite geolocalización",
-        variant: "destructive"
-      });
+  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (onSelectLocation) {
+      // Proporcionamos coordenadas ficticias ya que no usamos mapa
+      onSelectLocation(e.target.value, [0, 0]);
     }
   };
 
   return (
     <div className="space-y-2">
-      <div 
-        ref={mapContainer} 
-        className="h-64 w-full rounded-md border border-gray-300 shadow-sm"
-        style={{ display: loading && !googleMapsLoaded ? "flex" : "block" }}
-      >
-        {loading && !googleMapsLoaded && (
-          <div className="flex items-center justify-center w-full h-full">
-            <p>Cargando mapa...</p>
-          </div>
-        )}
-        {apiError && (
-          <div className="flex items-center justify-center w-full h-full">
-            <p className="text-red-500">Error al cargar el mapa</p>
-          </div>
-        )}
+      <div className="flex items-center gap-2">
+        <MapPin className="h-5 w-5 text-estilo-gold" />
+        <Label htmlFor="direccion">Dirección completa</Label>
       </div>
       
-      {!readOnly && (
-        <div className="flex justify-between items-center">
-          <p className="text-sm text-gray-500">
-            {!loading ? "Arrastra el pin para seleccionar una ubicación exacta" : "Cargando..."}
-          </p>
-          <Button
-            type="button"
-            size="sm"
-            variant="outline"
-            onClick={handleUseCurrentLocation}
-            disabled={loading || !googleMapsLoaded}
-            className="text-estilo-gold border-estilo-gold hover:bg-estilo-gold hover:text-white"
-          >
-            <MapPin className="mr-2 h-4 w-4" />
-            Ubicación actual
-          </Button>
+      {readOnly ? (
+        <div className="p-3 border rounded-md bg-gray-50">
+          <p>{address || "No se especificó dirección"}</p>
         </div>
+      ) : (
+        <Input
+          id="direccion"
+          placeholder="Ingresa tu dirección completa"
+          value={address}
+          onChange={handleAddressChange}
+          disabled={readOnly}
+          className="w-full"
+        />
+      )}
+      
+      {!readOnly && (
+        <p className="text-sm text-gray-500">
+          Ingresa tu dirección completa incluyendo referencias para facilitar la entrega
+        </p>
       )}
     </div>
   );
