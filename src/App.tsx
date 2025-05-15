@@ -15,6 +15,7 @@ import UserProfilePage from "./pages/UserProfilePage";
 import CartPage from "./pages/CartPage";
 import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 import { CartProvider } from "./contexts/CartContext";
+import FloatingWhatsAppButton from "./components/FloatingWhatsAppButton";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <FloatingWhatsAppButton />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/categoria/:categorySlug" element={<CategoryPage />} />
