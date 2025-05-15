@@ -27,6 +27,7 @@ const AddressMap: React.FC<AddressMapProps> = ({ address, onSelectLocation, read
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [googleMapsLoaded, setGoogleMapsLoaded] = useState(false);
+  const [apiError, setApiError] = useState(false);
   
   // Cargar el API de Google Maps
   useEffect(() => {
@@ -35,13 +36,25 @@ const AddressMap: React.FC<AddressMapProps> = ({ address, onSelectLocation, read
         setLoading(true);
         const script = document.createElement('script');
         script.id = 'google-maps-script';
-        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCdMq5I8qg38bC1pTMw7Krl_9U3obXjgWs&libraries=places&callback=initMap`;
+        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyBt8_PjyPJ_4UQT2jfI9aiqXvR0GgkHCZE&libraries=places&callback=initMap`;
         script.async = true;
         script.defer = true;
         
         window.initMap = () => {
           setGoogleMapsLoaded(true);
           setLoading(false);
+        };
+
+        // Add error handler
+        script.onerror = () => {
+          setLoading(false);
+          setApiError(true);
+          console.error('Google Maps failed to load');
+          toast({
+            title: "Error",
+            description: "No se pudo cargar Google Maps",
+            variant: "destructive"
+          });
         };
         
         document.head.appendChild(script);
@@ -55,49 +68,54 @@ const AddressMap: React.FC<AddressMapProps> = ({ address, onSelectLocation, read
   useEffect(() => {
     if (!googleMapsLoaded || !mapContainer.current) return;
     
-    geocoder.current = new window.google.maps.Geocoder();
-    
-    // Coordenadas por defecto (Lima, Perú)
-    const defaultPosition = { lat: -12.04, lng: -77.03 };
-    
-    map.current = new window.google.maps.Map(mapContainer.current, {
-      zoom: 12,
-      center: defaultPosition,
-      mapTypeControl: false,
-      streetViewControl: false,
-      fullscreenControl: true,
-    });
-    
-    marker.current = new window.google.maps.Marker({
-      position: defaultPosition,
-      map: map.current,
-      draggable: !readOnly,
-      icon: {
-        path: window.google.maps.SymbolPath.CIRCLE,
-        scale: 10,
-        fillColor: "#C9A96F",
-        fillOpacity: 1,
-        strokeWeight: 2,
-        strokeColor: "#FFFFFF",
-      }
-    });
-    
-    if (!readOnly && marker.current) {
-      // Evento de arrastrar el marcador
-      window.google.maps.event.addListener(marker.current, 'dragend', () => {
-        if (marker.current && onSelectLocation) {
-          const position = marker.current.getPosition();
-          const lat = position?.lat() || 0;
-          const lng = position?.lng() || 0;
-          
-          reverseGeocode(lng, lat);
+    try {
+      geocoder.current = new window.google.maps.Geocoder();
+      
+      // Coordenadas por defecto (Lima, Perú)
+      const defaultPosition = { lat: -12.04, lng: -77.03 };
+      
+      map.current = new window.google.maps.Map(mapContainer.current, {
+        zoom: 12,
+        center: defaultPosition,
+        mapTypeControl: false,
+        streetViewControl: false,
+        fullscreenControl: true,
+      });
+      
+      marker.current = new window.google.maps.Marker({
+        position: defaultPosition,
+        map: map.current,
+        draggable: !readOnly,
+        icon: {
+          path: window.google.maps.SymbolPath.CIRCLE,
+          scale: 10,
+          fillColor: "#C9A96F",
+          fillOpacity: 1,
+          strokeWeight: 2,
+          strokeColor: "#FFFFFF",
         }
       });
-    }
-    
-    // Si hay una dirección proporcionada, geocodificarla
-    if (address) {
-      geocodeAddress(address);
+      
+      if (!readOnly && marker.current) {
+        // Evento de arrastrar el marcador
+        window.google.maps.event.addListener(marker.current, 'dragend', () => {
+          if (marker.current && onSelectLocation) {
+            const position = marker.current.getPosition();
+            const lat = position?.lat() || 0;
+            const lng = position?.lng() || 0;
+            
+            reverseGeocode(lng, lat);
+          }
+        });
+      }
+      
+      // Si hay una dirección proporcionada, geocodificarla
+      if (address) {
+        geocodeAddress(address);
+      }
+    } catch (error) {
+      console.error('Error initializing Google Maps:', error);
+      setApiError(true);
     }
   }, [googleMapsLoaded, address, readOnly, onSelectLocation]);
   
@@ -189,6 +207,11 @@ const AddressMap: React.FC<AddressMapProps> = ({ address, onSelectLocation, read
         {loading && !googleMapsLoaded && (
           <div className="flex items-center justify-center w-full h-full">
             <p>Cargando mapa...</p>
+          </div>
+        )}
+        {apiError && (
+          <div className="flex items-center justify-center w-full h-full">
+            <p className="text-red-500">Error al cargar el mapa</p>
           </div>
         )}
       </div>

@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, CreditCard, Clock, Truck, Instagram, MessageCircle } from 'lucide-react';
+import { Mail, Phone, MapPin, CreditCard, Clock, Truck, Instagram, MessageCircle, TikTok } from 'lucide-react';
 
 
 const Footer = () => {
@@ -39,8 +40,11 @@ const Footer = () => {
               Tu destino para moda exclusiva y de alta calidad. Encuentra las últimas tendencias y clásicos atemporales.
             </p>
             <div className="flex space-x-4 mt-6">
-              <a href="#" className="text-gray-400 hover:text-estilo-gold transition-colors">
+              <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-estilo-gold transition-colors">
                 <Instagram size={20} />
+              </a>
+              <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-estilo-gold transition-colors">
+                <TikTok size={20} />
               </a>
             </div>
           </div>
