@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { WhatsApp } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 
 const FloatingWhatsAppButton = () => {
   return (
@@ -12,7 +12,7 @@ const FloatingWhatsAppButton = () => {
       aria-label="Comprar por WhatsApp"
     >
       <div className="flex items-center">
-        <WhatsApp className="h-6 w-6 mr-2" />
+        <MessageSquare className="h-6 w-6 mr-2" />
         <span className="font-medium">Compra ahora</span>
       </div>
     </a>
