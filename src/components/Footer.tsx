@@ -45,7 +45,6 @@ const Footer = () => {
               <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-estilo-gold transition-colors">
                 <TiktokIcon size={20} />
               </a>
-              //
             </div>
           </div>
 

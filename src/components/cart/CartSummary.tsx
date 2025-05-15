@@ -27,7 +27,7 @@ const CartSummary: React.FC<CartSummaryProps> = ({
         </div>
         <div className="flex justify-between">
           <span>Gastos de envío</span>
-          <span>Calculadar </span>
+          <span>Calculando </span>
         </div>
       </div>
       
@@ -87,7 +87,7 @@ const CartSummary: React.FC<CartSummaryProps> = ({
       <div className="mt-6 text-center">
         <p className="text-xs text-gray-500">Pago seguro garantizado con Mercado Pago</p>
         <div className="flex justify-center gap-2 mt-2">
-          <img src="https://static.wikia.nocookie.net/logopedia/images/d/d2/MercadoPago_%28Horizontal%29.svg/revision/latest?cb=20210404023536&path-prefix=es" alt="Mercado Pago" className="h-8" />
+          <img src="https://belvo.com/wp-content/uploads/2023/07/mercado-pago-logo.png" alt="Mercado Pago" className="h-8" />
         </div>
       </div>
     </div>

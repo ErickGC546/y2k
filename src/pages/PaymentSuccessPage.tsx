@@ -109,7 +109,7 @@ const PaymentSuccessPage: React.FC = () => {
               <li>Recibirás un correo electrónico con la confirmación de tu pedido.</li>
               <li>Prepararemos tus productos para envío.</li>
               <li>Te informaremos cuando tu pedido esté en camino.</li>
-              <li>¡Disfruta de tus nuevos productos Estilo Afro!</li>
+              <li>¡Disfruta de tus nuevos productos!</li>
             </ol>
           </div>
           
