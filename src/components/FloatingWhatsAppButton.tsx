@@ -4,7 +4,7 @@ import React from 'react';
 const FloatingWhatsAppButton: React.FC = () => {
   return (
     <a 
-      href="https://web.whatsapp.com/send?phone=51955286210&text=Hola, estoy interesado en un producto" 
+      href="https://wa.me/51955286210?text=Hola,%20estoy%20interesado%20en%20un%20producto" 
       target="_blank" 
       rel="noopener noreferrer"
       className="fixed bottom-8 right-8 z-50 flex items-center shadow-lg rounded-md overflow-hidden"

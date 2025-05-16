@@ -113,7 +113,7 @@ const Navbar = () => {
           <div className="flex items-center space-x-6">
             <div className="flex items-center">
               <a
-                href="https://web.whatsapp.com/send?phone=51955286210&text=Hola, estoy interesado en un producto"
+                href="https://wa.me/51955286210?text=Hola,%20estoy%20interesado%20en%20un%20producto"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xs mr-2 hidden md:flex items-center"
