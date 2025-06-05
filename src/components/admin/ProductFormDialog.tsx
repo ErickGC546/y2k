@@ -105,7 +105,7 @@ const ProductFormDialog: React.FC<ProductFormDialogProps> = ({
       } else {
         const { error } = await supabase
           .from('products')
-          .insert([data]);
+          .insert(data);
 
         if (error) throw error;
         

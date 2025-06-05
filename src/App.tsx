@@ -14,6 +14,7 @@ import RecoverPasswordPage from "./pages/RecoverPasswordPage";
 import UserProfilePage from "./pages/UserProfilePage";
 import CartPage from "./pages/CartPage";
 import PaymentSuccessPage from "./pages/PaymentSuccessPage";
+import AdminPage from "./pages/AdminPage";
 import { CartProvider } from "./contexts/CartContext";
 import FloatingWhatsAppButton from "./components/FloatingWhatsAppButton";
 

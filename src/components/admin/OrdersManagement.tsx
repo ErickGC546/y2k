@@ -17,8 +17,6 @@ interface Order {
   status: string;
   shipping_address: string | null;
   created_at: string;
-  user_email?: string;
-  user_name?: string;
 }
 
 const OrdersManagement: React.FC = () => {
@@ -35,21 +33,12 @@ const OrdersManagement: React.FC = () => {
     try {
       const { data, error } = await supabase
         .from('orders')
-        .select(`
-          *,
-          profiles!inner(email, full_name)
-        `)
+        .select('*')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
 
-      const ordersWithUserInfo = data?.map(order => ({
-        ...order,
-        user_email: order.profiles?.email,
-        user_name: order.profiles?.full_name
-      })) || [];
-
-      setOrders(ordersWithUserInfo);
+      setOrders(data || []);
     } catch (error) {
       console.error('Error fetching orders:', error);
       toast({
@@ -101,9 +90,8 @@ const OrdersManagement: React.FC = () => {
   };
 
   const filteredOrders = orders.filter(order =>
-    order.user_email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.user_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.id.toLowerCase().includes(searchTerm.toLowerCase())
+    order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    order.user_id.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (loading) {
@@ -129,7 +117,7 @@ const OrdersManagement: React.FC = () => {
           <TableHeader>
             <TableRow>
               <TableHead>ID Pedido</TableHead>
-              <TableHead>Cliente</TableHead>
+              <TableHead>Usuario ID</TableHead>
               <TableHead>Total</TableHead>
               <TableHead>Estado</TableHead>
               <TableHead>Fecha</TableHead>
@@ -142,11 +130,8 @@ const OrdersManagement: React.FC = () => {
                 <TableCell className="font-mono text-xs">
                   {order.id.substring(0, 8)}...
                 </TableCell>
-                <TableCell>
-                  <div>
-                    <div className="font-medium">{order.user_name || 'Sin nombre'}</div>
-                    <div className="text-sm text-gray-500">{order.user_email}</div>
-                  </div>
+                <TableCell className="font-mono text-xs">
+                  {order.user_id?.substring(0, 8)}...
                 </TableCell>
                 <TableCell>S/ {order.total}</TableCell>
                 <TableCell>{getStatusBadge(order.status)}</TableCell>
