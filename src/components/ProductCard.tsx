@@ -4,50 +4,67 @@ import { ShoppingBag, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 
-export interface Product {
-  id: number;
+interface ProductCardProps {
+  id: string;
   name: string;
-  category: string;
   price: number;
   originalPrice?: number;
   image: string;
-  isNew?: boolean;
   badge?: string;
+  isNew?: boolean;
   slug: string;
 }
 
-interface ProductCardProps {
-  product: Product;
-}
-
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ 
+  id, 
+  name, 
+  price, 
+  originalPrice, 
+  image, 
+  badge, 
+  isNew, 
+  slug 
+}) => {
   const { addToCart } = useCart();
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    const product = {
+      id: parseInt(id),
+      name,
+      category: 'general', // Default category since we don't have it in props
+      price,
+      originalPrice,
+      image,
+      isNew,
+      badge,
+      slug
+    };
+    
     addToCart(product, 1);
   };
 
   return (
     <div className="group product-card relative bg-white overflow-hidden">
       <div className="relative">
-        <Link to={`/producto/${product.slug}`}>
+        <Link to={`/producto/${slug}`}>
           <img 
-            src={product.image} 
-            alt={product.name} 
+            src={image} 
+            alt={name} 
             className="w-full h-[300px] object-cover group-hover:scale-105 transition-transform duration-500"
           />
         </Link>
         
         {/* Badges */}
-        {product.badge && (
+        {badge && (
           <div className="absolute top-2 left-2 bg-estilo-gold text-white text-xs font-bold py-1 px-2">
-            {product.badge}
+            {badge}
           </div>
         )}
         
-        {product.isNew && (
+        {isNew && (
           <div className="absolute top-2 right-2 bg-black text-white text-xs font-bold py-1 px-2">
             NUEVO
           </div>
@@ -70,17 +87,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       
       {/* Product info */}
       <div className="p-3 text-left">
-        <Link to={`/producto/${product.slug}`} className="block">
+        <Link to={`/producto/${slug}`} className="block">
           <h3 className="font-medium text-sm mb-1 hover:text-estilo-gold transition-colors">
-            {product.name}
+            {name}
           </h3>
         </Link>
-        <p className="text-gray-600 text-xs mb-2">{product.category}</p>
         <div className="flex items-center">
-          <span className="font-bold text-lg">S/ {product.price.toFixed(2)}</span>
-          {product.originalPrice && (
+          <span className="font-bold text-lg">S/ {price.toFixed(2)}</span>
+          {originalPrice && (
             <span className="text-gray-500 line-through text-sm ml-2">
-              S/ {product.originalPrice.toFixed(2)}
+              S/ {originalPrice.toFixed(2)}
             </span>
           )}
         </div>
