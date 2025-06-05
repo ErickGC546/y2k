@@ -1,4 +1,5 @@
-import { Product } from '../components/ProductCard';
+
+import { Product } from '../types/product';
 
 // Mock data for products by category
 export const productsByCategory: Record<string, Product[]> = {

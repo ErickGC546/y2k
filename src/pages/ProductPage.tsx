@@ -1,9 +1,10 @@
+
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { ArrowLeft, ShoppingBag, Heart } from 'lucide-react';
-import { Product } from '../components/ProductCard';
+import { Product } from '../types/product';
 import { useCart } from '../contexts/CartContext';
 import { productsByCategory } from '../data/categoryProducts'; // Importamos los datos
 
