@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingBag, User, Search, Menu, X, Instagram } from 'lucide-react';
 import { TiktokIcon } from './TiktokIcon';
 import { useCart } from '../contexts/CartContext';
+import { useAdmin } from '../hooks/useAdmin';
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import logo from '../assets/logo.png';
@@ -13,6 +14,7 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { getTotalItems } = useCart();
+  const { isAdmin } = useAdmin();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -177,6 +179,9 @@ const Navbar = () => {
             <li><Link to="/categoria/accesorios" className="hover:text-estilo-gold transition-colors">ACCESORIOS</Link></li>
             <li><Link to="/categoria/ofertas" className="hover:text-estilo-gold transition-colors">OFERTAS</Link></li>
             <li><Link to="/categoria/novedades" className="hover:text-estilo-gold transition-colors">NOVEDADES</Link></li>
+            {isAdmin && (
+              <li><Link to="/admin" className="hover:text-estilo-gold transition-colors text-estilo-gold font-bold">ADMIN</Link></li>
+            )}
           </ul>
         </div>
       </nav>
@@ -190,6 +195,9 @@ const Navbar = () => {
             <li><Link to="/categoria/accesorios" className="block py-2 hover:text-estilo-gold transition-colors">ACCESORIOS</Link></li>
             <li><Link to="/categoria/ofertas" className="block py-2 hover:text-estilo-gold transition-colors">OFERTAS</Link></li>
             <li><Link to="/categoria/novedades" className="block py-2 hover:text-estilo-gold transition-colors">NOVEDADES</Link></li>
+            {isAdmin && (
+              <li><Link to="/admin" className="block py-2 hover:text-estilo-gold transition-colors text-estilo-gold font-bold">ADMIN</Link></li>
+            )}
             <li className="pt-4 border-t border-gray-200">
               <Link to="/politicas" className="block py-2 hover:text-estilo-gold transition-colors">Políticas y condiciones</Link>
             </li>
