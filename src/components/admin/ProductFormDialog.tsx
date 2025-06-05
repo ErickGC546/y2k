@@ -90,10 +90,25 @@ const ProductFormDialog: React.FC<ProductFormDialogProps> = ({
 
   const onSubmit = async (data: ProductFormData) => {
     try {
+      // Ensure we have clean data for insertion
+      const productData = {
+        name: data.name,
+        description: data.description || null,
+        price: data.price,
+        original_price: data.original_price || null,
+        category: data.category,
+        image_url: data.image_url || null,
+        stock: data.stock,
+        is_active: data.is_active,
+        is_new: data.is_new,
+        badge: data.badge || null,
+        slug: data.slug,
+      };
+
       if (isEditing) {
         const { error } = await supabase
           .from('products')
-          .update(data)
+          .update(productData)
           .eq('id', product.id);
 
         if (error) throw error;
@@ -105,7 +120,7 @@ const ProductFormDialog: React.FC<ProductFormDialogProps> = ({
       } else {
         const { error } = await supabase
           .from('products')
-          .insert(data);
+          .insert(productData);
 
         if (error) throw error;
         
