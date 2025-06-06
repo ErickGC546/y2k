@@ -24,13 +24,13 @@ interface ProductGridProps {
   limit?: number;
 }
 
-const ProductGrid: React.FC<ProductGridProps> = ({ category, showAll = false}) => {
+const ProductGrid: React.FC<ProductGridProps> = ({ category, showAll = false, limit }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchProducts();
-  }, [category, showAll ]);
+  }, [category, showAll, limit]);
 
   const fetchProducts = async () => {
     try {
@@ -40,11 +40,39 @@ const ProductGrid: React.FC<ProductGridProps> = ({ category, showAll = false}) =
         .eq('is_active', true)
         .order('created_at', { ascending: false });
 
+      // Map category slugs to database categories
       if (category && !showAll) {
-        query = query.eq('category', category);
+        let dbCategory = category;
+        switch (category) {
+          case 'mujer':
+            dbCategory = 'Mujer';
+            break;
+          case 'hombre':
+            dbCategory = 'Hombre';
+            break;
+          case 'accesorios':
+            dbCategory = 'Accesorios';
+            break;
+          case 'ofertas':
+            // For offers, we'll get products with original_price (indicating discounts)
+            query = query.not('original_price', 'is', null);
+            dbCategory = null; // Don't filter by category for offers
+            break;
+          case 'novedades':
+            // For new arrivals, get products marked as new
+            query = query.eq('is_new', true);
+            dbCategory = null; // Don't filter by category for new items
+            break;
+        }
+        
+        if (dbCategory) {
+          query = query.eq('category', dbCategory);
+        }
       }
 
-      
+      if (limit) {
+        query = query.limit(limit);
+      }
 
       const { data, error } = await query;
 
@@ -70,7 +98,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ category, showAll = false}) =
   if (products.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500 text-lg">No se encontraron productos.</p>
+        <p className="text-gray-500 text-lg">No se encontraron productos en esta categoría.</p>
       </div>
     );
   }
