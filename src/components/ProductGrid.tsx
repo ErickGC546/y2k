@@ -24,13 +24,13 @@ interface ProductGridProps {
   limit?: number;
 }
 
-const ProductGrid: React.FC<ProductGridProps> = ({ category, showAll = false, limit }) => {
+const ProductGrid: React.FC<ProductGridProps> = ({ category, showAll = false}) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchProducts();
-  }, [category, showAll, limit]);
+  }, [category, showAll ]);
 
   const fetchProducts = async () => {
     try {
@@ -44,9 +44,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ category, showAll = false, li
         query = query.eq('category', category);
       }
 
-      if (limit && !showAll) {
-        query = query.limit(limit);
-      }
+      
 
       const { data, error } = await query;
 
