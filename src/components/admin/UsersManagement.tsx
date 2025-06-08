@@ -26,9 +26,9 @@ const UsersManagement: React.FC = () => {
 
   const fetchUsers = async () => {
     try {
-      console.log('Fetching users...');
+      console.log('Fetching all users...');
       
-      // Obtener todos los perfiles de usuarios
+      // Obtener todos los perfiles de usuarios con datos del auth
       const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
         .select('*')
@@ -36,7 +36,16 @@ const UsersManagement: React.FC = () => {
 
       if (profilesError) {
         console.error('Error fetching profiles:', profilesError);
-        throw profilesError;
+        // Si no hay permisos para ver profiles, intentamos con la función RPC
+        const { data: rpcData, error: rpcError } = await supabase.rpc('get_all_users');
+        if (rpcError) {
+          console.error('Error fetching users via RPC:', rpcError);
+          throw rpcError;
+        }
+        console.log('Users fetched via RPC:', rpcData);
+        setUsers(rpcData || []);
+        setLoading(false);
+        return;
       }
 
       console.log('Profiles fetched:', profiles);
@@ -48,7 +57,6 @@ const UsersManagement: React.FC = () => {
 
       if (rolesError) {
         console.error('Error fetching user roles:', rolesError);
-        // No lanzamos error aquí porque algunos usuarios pueden no tener roles asignados
       }
 
       console.log('User roles fetched:', userRoles);
@@ -66,6 +74,7 @@ const UsersManagement: React.FC = () => {
       setUsers(usersWithRoles);
     } catch (error) {
       console.error('Error fetching users:', error);
+      setUsers([]);
     } finally {
       setLoading(false);
     }
