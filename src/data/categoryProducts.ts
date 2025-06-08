@@ -119,7 +119,7 @@ export const productsByCategory: Record<string, Product[]> = {
       originalPrice: 89.99,
       image: 'https://images.unsplash.com/photo-1614252369475-531eba835eb1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=715&q=80',
       badge: 'OFERTA',
-      slug: 'sueter-lana',
+      slug: 'nike-nocta',
     },
     {
       id: 11,
