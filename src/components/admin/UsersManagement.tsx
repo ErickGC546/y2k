@@ -26,19 +26,32 @@ const UsersManagement: React.FC = () => {
 
   const fetchUsers = async () => {
     try {
-      // Obtener perfiles de usuarios
+      console.log('Fetching users...');
+      
+      // Obtener todos los perfiles de usuarios
       const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
-        .select('id, email, full_name, created_at');
+        .select('*')
+        .order('created_at', { ascending: false });
 
-      if (profilesError) throw profilesError;
+      if (profilesError) {
+        console.error('Error fetching profiles:', profilesError);
+        throw profilesError;
+      }
+
+      console.log('Profiles fetched:', profiles);
 
       // Obtener roles de usuarios
       const { data: userRoles, error: rolesError } = await supabase
         .from('user_roles')
         .select('user_id, role');
 
-      if (rolesError) throw rolesError;
+      if (rolesError) {
+        console.error('Error fetching user roles:', rolesError);
+        // No lanzamos error aquí porque algunos usuarios pueden no tener roles asignados
+      }
+
+      console.log('User roles fetched:', userRoles);
 
       // Combinar datos
       const usersWithRoles = profiles?.map(profile => {
@@ -49,6 +62,7 @@ const UsersManagement: React.FC = () => {
         };
       }) || [];
 
+      console.log('Users with roles:', usersWithRoles);
       setUsers(usersWithRoles);
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -69,7 +83,7 @@ const UsersManagement: React.FC = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Gestión de Usuarios</CardTitle>
+        <CardTitle>Gestión de Usuarios ({users.length} usuarios registrados)</CardTitle>
         <div className="flex items-center space-x-2">
           <Search className="h-4 w-4 text-gray-400" />
           <Input
@@ -81,41 +95,47 @@ const UsersManagement: React.FC = () => {
         </div>
       </CardHeader>
       <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Nombre</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Rol</TableHead>
-              <TableHead>Fecha de Registro</TableHead>
-              <TableHead>Estado</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredUsers.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell className="font-medium">
-                  {user.full_name || 'Sin nombre'}
-                </TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>
-                  <Badge variant={user.role === 'admin' ? 'default' : 'secondary'}>
-                    {user.role === 'admin' ? 'Administrador' : 'Cliente'}
-                  </Badge>
-                </TableCell>
-                <TableCell>
-                  {new Date(user.created_at).toLocaleDateString('es-ES')}
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center">
-                    <UserCheck className="h-4 w-4 text-green-500 mr-2" />
-                    <span className="text-green-700">Activo</span>
-                  </div>
-                </TableCell>
+        {filteredUsers.length === 0 ? (
+          <div className="text-center py-8 text-gray-500">
+            {searchTerm ? 'No se encontraron usuarios que coincidan con la búsqueda.' : 'No hay usuarios registrados.'}
+          </div>
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Nombre</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Rol</TableHead>
+                <TableHead>Fecha de Registro</TableHead>
+                <TableHead>Estado</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {filteredUsers.map((user) => (
+                <TableRow key={user.id}>
+                  <TableCell className="font-medium">
+                    {user.full_name || 'Sin nombre'}
+                  </TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>
+                    <Badge variant={user.role === 'admin' ? 'default' : 'secondary'}>
+                      {user.role === 'admin' ? 'Administrador' : 'Cliente'}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    {new Date(user.created_at).toLocaleDateString('es-ES')}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center">
+                      <UserCheck className="h-4 w-4 text-green-500 mr-2" />
+                      <span className="text-green-700">Activo</span>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
       </CardContent>
     </Card>
   );
