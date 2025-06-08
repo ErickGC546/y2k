@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
-import { Search, UserCheck, UserX } from 'lucide-react';
+import { Search, UserCheck } from 'lucide-react';
 import { supabase } from "@/integrations/supabase/client";
 
 interface User {
@@ -28,7 +28,7 @@ const UsersManagement: React.FC = () => {
     try {
       console.log('Fetching all users...');
       
-      // Obtener todos los perfiles de usuarios con datos del auth
+      // Obtener todos los perfiles de usuarios
       const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
         .select('*')
@@ -36,14 +36,7 @@ const UsersManagement: React.FC = () => {
 
       if (profilesError) {
         console.error('Error fetching profiles:', profilesError);
-        // Si no hay permisos para ver profiles, intentamos con la función RPC
-        const { data: rpcData, error: rpcError } = await supabase.rpc('get_all_users');
-        if (rpcError) {
-          console.error('Error fetching users via RPC:', rpcError);
-          throw rpcError;
-        }
-        console.log('Users fetched via RPC:', rpcData);
-        setUsers(rpcData || []);
+        setUsers([]);
         setLoading(false);
         return;
       }
