@@ -34,52 +34,59 @@ const ProductGrid: React.FC<ProductGridProps> = ({ category, showAll = false, li
 
   const fetchProducts = async () => {
     try {
+      console.log('Fetching products with params:', { category, showAll, limit });
+      
       let query = supabase
         .from('products')
         .select('*')
         .eq('is_active', true)
         .order('created_at', { ascending: false });
 
-      // Map category slugs to database categories
+      // Solo aplicar filtros de categoría si no queremos mostrar todos
       if (category && !showAll) {
-        let dbCategory = category;
+        console.log('Filtering by category:', category);
+        
+        // Mapear categorías de URL a categorías de base de datos
         switch (category) {
           case 'mujer':
-            dbCategory = 'Mujer';
+            query = query.eq('category', 'Mujer');
             break;
           case 'hombre':
-            dbCategory = 'Hombre';
+            query = query.eq('category', 'Hombre');
             break;
           case 'accesorios':
-            dbCategory = 'Accesorios';
+            query = query.eq('category', 'Accesorios');
             break;
           case 'ofertas':
-            // For offers, we'll get products with original_price (indicating discounts)
+            // Para ofertas, mostrar productos con precio original (descuentos)
             query = query.not('original_price', 'is', null);
-            dbCategory = null; // Don't filter by category for offers
             break;
           case 'novedades':
-            // For new arrivals, get products marked as new
+            // Para novedades, mostrar productos marcados como nuevos
             query = query.eq('is_new', true);
-            dbCategory = null; // Don't filter by category for new items
             break;
-        }
-        
-        if (dbCategory) {
-          query = query.eq('category', dbCategory);
+          default:
+            // Para otras categorías, intentar búsqueda directa
+            query = query.eq('category', category);
         }
       }
 
-      if (limit) {
+      if (limit && limit > 0) {
         query = query.limit(limit);
       }
 
       const { data, error } = await query;
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching products:', error);
+        throw error;
+      }
+
+      console.log('Products fetched:', data?.length || 0);
       setProducts(data || []);
     } catch (error) {
       console.error('Error fetching products:', error);
+      setProducts([]);
     } finally {
       setLoading(false);
     }

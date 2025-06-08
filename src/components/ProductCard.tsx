@@ -31,10 +31,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
     e.preventDefault();
     e.stopPropagation();
     
+    // Convertir los datos para que sean compatibles con el contexto del carrito
     const product = {
-      id: parseInt(id),
+      id: parseInt(id) || Date.now(), // Convertir string UUID a número, fallback si falla
       name,
-      category: 'general', // Default category since we don't have it in props
+      category: 'general', // Categoría por defecto
       price,
       originalPrice,
       image,
@@ -54,6 +55,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
             src={image} 
             alt={name} 
             className="w-full h-[300px] object-cover group-hover:scale-105 transition-transform duration-500"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.src = '/placeholder.svg';
+            }}
           />
         </Link>
         
