@@ -6,28 +6,28 @@ const slides = [
   {
     id: 1,
     image: 'https://img.ltwebstatic.com/images3_pi/2024/07/10/a1/1720577934657ce58311f50cb4c47e6235bb19a72d_thumbnail_720x.jpg',
-    title: 'NUEVA COLECCIÓN PRIMAVERA',
+    title: 'NUEVA COLECCIÓN',
     subtitle: 'Descubre las últimas tendencias',
     cta: 'COMPRAR AHORA',
-    link: '/categoria/primavera',
+    link: '/categoria/novedades',
     altText: 'Modelo con ropa de la nueva colección de primavera'
   },
   {
     id: 2,
-    image: 'https://oechsle.vteximg.com.br/arquivos/ids/20134200-800-800/2682726.jpg?v=638690454989870000',
-    title: '50% DE DESCUENTO',
-    subtitle: 'En prendas seleccionadas',
-    cta: 'VER OFERTAS',
-    link: '/categoria/ofertas',
+    image: 'https://i.ibb.co/m5ysYxmy/Grupo-de-ropa-Azul.png',
+    title: 'COLECCIÓN HOMBRES',
+    subtitle: 'Diseños únicos y limitados',
+    cta: 'DESCUBRIR',
+    link: '/categoria/hombre',
     altText: 'Modelo con ropa de oferta'
   },
   {
     id: 3,
     image: 'https://media.boohoo.com/i/boohoo/bmm94988_red_xl?w=537&qlt=default&fmt.jp2.qlt=70&fmt=auto&sm=fit',
-    title: 'COLECCIÓN EXCLUSIVA',
+    title: 'COLECCIÓN MUJERES',
     subtitle: 'Diseños únicos y limitados',
     cta: 'DESCUBRIR',
-    link: '/categoria/exclusiva',
+    link: '/categoria/mujer',
     altText: 'Modelo con colección exclusiva de moda'
   }
 ];

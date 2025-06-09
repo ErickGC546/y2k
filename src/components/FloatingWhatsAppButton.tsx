@@ -5,7 +5,7 @@ const FloatingWhatsAppButton: React.FC = () => {
     <>
       {/* Escritorio (md o más): usa web.whatsapp.com */}
       <a 
-        href="https://web.whatsapp.com/send?phone=51955286210&text=Hola,%20estoy%20interesado%20en%20un%20producto" 
+        href="https://web.whatsapp.com/send?phone=51900974712&text=Hola,%20estoy%20interesado%20en%20un%20producto" 
         target="_blank" 
         rel="noopener noreferrer"
         className="fixed bottom-8 right-8 z-50 hidden md:flex items-center shadow-lg rounded-md overflow-hidden"
@@ -32,7 +32,7 @@ const FloatingWhatsAppButton: React.FC = () => {
 
       {/* Móvil (menor a md): usa wa.me */}
       <a 
-        href="https://wa.me/51955286210?text=Hola,%20estoy%20interesado%20en%20un%20producto" 
+        href="https://wa.me/51900974712?text=Hola,%20estoy%20interesado%20en%20un%20producto" 
         target="_blank" 
         rel="noopener noreferrer"
         className="fixed bottom-8 right-8 z-50 flex md:hidden items-center shadow-lg rounded-md overflow-hidden"

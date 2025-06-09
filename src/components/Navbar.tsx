@@ -78,7 +78,7 @@ const Navbar = () => {
               </>
             )}
             <div className="hidden md:flex items-center space-x-3">
-              <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-estilo-gold transition-colors">
+              <a href="https://www.instagram.com/weup_2025?igsh=MWRucXhtNG1jOHFwOQ%3D%3D" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-estilo-gold transition-colors">
                   <Instagram size={20} />
               </a>
               <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-estilo-gold transition-colors">
