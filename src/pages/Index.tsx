@@ -16,7 +16,6 @@ const Index = () => {
       <FeaturedCategories />
       <ProductGrid title="Productos Destacados" showAll={false} limit={8} />
       <PromoSection />
-      <ProductGrid title="Ofertas Especiales" showAll={false} limit={8} />
       <NewsletterSection />
       <Footer />
     </div>

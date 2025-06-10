@@ -47,8 +47,12 @@ const ProductGrid: React.FC<ProductGridProps> = ({
         .eq('is_active', true)
         .order('created_at', { ascending: false });
 
-      // Si hay una categoría específica, filtrar por ella
-      if (category && category !== 'todos') {
+      // Caso especial para productos nuevos (novedades)
+      if (category === 'new') {
+        console.log('Filtering by new products');
+        query = query.eq('is_new', true);
+      } else if (category && category !== 'todos') {
+        // Si hay una categoría específica, filtrar por ella
         console.log('Filtering by category:', category);
         query = query.eq('category', category);
       }

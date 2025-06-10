@@ -25,6 +25,7 @@ const CategoryPage: React.FC = () => {
       case 'mujer': return 'Mujer';
       case 'hombre': return 'Hombre';
       case 'accesorios': return 'Accesorios';
+      case 'novedades': return 'new'; // Caso especial para productos nuevos
       default: return slug;
     }
   };
