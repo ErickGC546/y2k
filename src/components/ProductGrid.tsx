@@ -28,7 +28,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
   category, 
   title = "Productos Destacados", 
   showAll = false,
-  limit 
+  limit = 8
 }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -52,10 +52,9 @@ const ProductGrid: React.FC<ProductGridProps> = ({
         query = query.eq('category', category);
       }
 
-      // Si no es showAll y hay un limit específico, usar ese limit
+      // Aplicar límite solo si no es showAll
       if (!showAll) {
-        const limitToUse = limit || 8;
-        query = query.limit(limitToUse);
+        query = query.limit(limit);
       }
 
       const { data, error } = await query;
