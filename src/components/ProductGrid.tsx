@@ -83,7 +83,6 @@ const ProductGrid: React.FC<ProductGridProps> = ({
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <h2 className="text-2xl font-bold text-center mb-8">{title}</h2>
         <div className="text-center py-8">Cargando productos...</div>
       </div>
     );
@@ -92,7 +91,6 @@ const ProductGrid: React.FC<ProductGridProps> = ({
   if (products.length === 0) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <h2 className="text-2xl font-bold text-center mb-8">{title}</h2>
         <div className="text-center py-8 text-gray-500">
           No se encontraron productos{category && category !== 'todos' ? ` en la categoría "${category}"` : ''}.
         </div>

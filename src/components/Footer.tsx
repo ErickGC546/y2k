@@ -39,7 +39,7 @@ const Footer = () => {
               Tu destino para moda exclusiva y de alta calidad. Encuentra las últimas tendencias y clásicos atemporales.
             </p>
             <div className="flex space-x-4 mt-6">
-              <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-estilo-gold transition-colors">
+              <a href="https://www.instagram.com/weup_2025?igsh=MWRucXhtNG1jOHFwOQ%3D%3D" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-estilo-gold transition-colors">
                 <Instagram size={20} />
               </a>
               <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-estilo-gold transition-colors">
@@ -53,8 +53,6 @@ const Footer = () => {
             <ul className="space-y-2 text-sm">
               <li><Link to="/categoria/mujer" className="text-gray-400 hover:text-estilo-gold transition-colors">Mujer</Link></li>
               <li><Link to="/categoria/hombre" className="text-gray-400 hover:text-estilo-gold transition-colors">Hombre</Link></li>
-              <li><Link to="/categoria/accesorios" className="text-gray-400 hover:text-estilo-gold transition-colors">Accesorios</Link></li>
-              <li><Link to="/categoria/ofertas" className="text-gray-400 hover:text-estilo-gold transition-colors">Ofertas</Link></li>
               <li><Link to="/categoria/novedades" className="text-gray-400 hover:text-estilo-gold transition-colors">Novedades</Link></li>
             </ul>
           </div>

@@ -176,8 +176,6 @@ const Navbar = () => {
           <ul className="flex justify-center space-x-10 font-medium">
             <li><Link to="/categoria/mujer" className="hover:text-estilo-gold transition-colors">MUJER</Link></li>
             <li><Link to="/categoria/hombre" className="hover:text-estilo-gold transition-colors">HOMBRE</Link></li>
-            <li><Link to="/categoria/accesorios" className="hover:text-estilo-gold transition-colors">ACCESORIOS</Link></li>
-            <li><Link to="/categoria/ofertas" className="hover:text-estilo-gold transition-colors">OFERTAS</Link></li>
             <li><Link to="/categoria/novedades" className="hover:text-estilo-gold transition-colors">NOVEDADES</Link></li>
             {isAdmin && (
               <li><Link to="/admin" className="hover:text-estilo-gold transition-colors text-estilo-gold font-bold">ADMIN</Link></li>
@@ -192,8 +190,6 @@ const Navbar = () => {
           <ul className="flex flex-col space-y-4">
             <li><Link to="/categoria/mujer" className="block py-2 hover:text-estilo-gold transition-colors">MUJER</Link></li>
             <li><Link to="/categoria/hombre" className="block py-2 hover:text-estilo-gold transition-colors">HOMBRE</Link></li>
-            <li><Link to="/categoria/accesorios" className="block py-2 hover:text-estilo-gold transition-colors">ACCESORIOS</Link></li>
-            <li><Link to="/categoria/ofertas" className="block py-2 hover:text-estilo-gold transition-colors">OFERTAS</Link></li>
             <li><Link to="/categoria/novedades" className="block py-2 hover:text-estilo-gold transition-colors">NOVEDADES</Link></li>
             {isAdmin && (
               <li><Link to="/admin" className="block py-2 hover:text-estilo-gold transition-colors text-estilo-gold font-bold">ADMIN</Link></li>
