@@ -181,7 +181,7 @@ const RegisterForm = () => {
               </FormControl>
               <div className="space-y-1 leading-none">
                 <FormLabel>
-                  Acepto los <a href="/politicas" className="text-estilo-gold hover:underline">términos y condiciones</a>
+                  Acepto los términos y condiciones
                 </FormLabel>
                 <FormMessage />
               </div>
