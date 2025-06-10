@@ -12,7 +12,7 @@ interface User {
   email: string;
   full_name: string | null;
   created_at: string;
-  role?: string;
+  role: string;
 }
 
 const UsersManagement: React.FC = () => {
@@ -26,45 +26,19 @@ const UsersManagement: React.FC = () => {
 
   const fetchUsers = async () => {
     try {
-      console.log('Fetching all users...');
+      console.log('Fetching all users using admin function...');
       
-      // Obtener todos los perfiles de usuarios
-      const { data: profiles, error: profilesError } = await supabase
-        .from('profiles')
-        .select('*')
-        .order('created_at', { ascending: false });
+      const { data, error } = await supabase.rpc('get_all_users_for_admin');
 
-      if (profilesError) {
-        console.error('Error fetching profiles:', profilesError);
+      if (error) {
+        console.error('Error fetching users:', error);
         setUsers([]);
         setLoading(false);
         return;
       }
 
-      console.log('Profiles fetched:', profiles);
-
-      // Obtener roles de usuarios
-      const { data: userRoles, error: rolesError } = await supabase
-        .from('user_roles')
-        .select('user_id, role');
-
-      if (rolesError) {
-        console.error('Error fetching user roles:', rolesError);
-      }
-
-      console.log('User roles fetched:', userRoles);
-
-      // Combinar datos
-      const usersWithRoles = profiles?.map(profile => {
-        const userRole = userRoles?.find(role => role.user_id === profile.id);
-        return {
-          ...profile,
-          role: userRole?.role || 'customer'
-        };
-      }) || [];
-
-      console.log('Users with roles:', usersWithRoles);
-      setUsers(usersWithRoles);
+      console.log('Users fetched successfully:', data);
+      setUsers(data || []);
     } catch (error) {
       console.error('Error fetching users:', error);
       setUsers([]);
