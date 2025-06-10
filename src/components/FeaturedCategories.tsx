@@ -15,13 +15,7 @@ const categories = [
     name: 'Hombre',
     image: 'https://images.unsplash.com/photo-1610652492500-ded49ceeb378?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
     slug: 'hombre',
-  },
-  {
-    id: 3,
-    name: 'Accesorios',
-    image: 'https://media.istockphoto.com/id/1042336112/es/foto/ropa-y-accesorios-para-hombres-y-mujeres-listas-para-viajar-estilo-de-vida.jpg?s=170667a&w=0&k=20&c=V9W0NYAvFVxEhQSKOktQhdhHB9TsF52u4VAg2DlL4x0=',
-    slug: 'accesorios',
-  },
+  }
 ];
 
 const FeaturedCategories = () => {
