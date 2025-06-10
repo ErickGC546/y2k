@@ -111,7 +111,7 @@ const ProductPage: React.FC = () => {
       slug: product.slug
     };
     
-    addToCart(cartProduct, quantity);
+    addToCart(cartProduct, quantity, size);
   };
 
   const getCategorySlug = (category: string) => {

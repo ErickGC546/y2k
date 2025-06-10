@@ -26,6 +26,9 @@ const CartItem: React.FC<CartItemProps> = ({ item, onUpdateQuantity, onRemoveFro
           {item.name}
         </Link>
         <p className="text-sm text-gray-600">{item.category}</p>
+        {item.size && (
+          <p className="text-sm text-gray-600">Talla: {item.size.toUpperCase()}</p>
+        )}
         <div className="mt-2 flex items-center">
           <button 
             onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}

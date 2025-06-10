@@ -44,7 +44,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
       slug
     };
     
-    addToCart(product, 1);
+    // Añadir con talla M por defecto desde la vista rápida
+    addToCart(product, 1, 'm');
   };
 
   return (

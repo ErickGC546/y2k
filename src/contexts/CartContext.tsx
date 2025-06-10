@@ -5,11 +5,12 @@ import { toast } from "sonner";
 
 export interface CartItem extends Product {
   quantity: number;
+  size?: string;
 }
 
 interface CartContextType {
   cartItems: CartItem[];
-  addToCart: (product: Product, quantity?: number) => void;
+  addToCart: (product: Product, quantity?: number, size?: string) => void;
   removeFromCart: (productId: number) => void;
   updateQuantity: (productId: number, quantity: number) => void;
   clearCart: () => void;
@@ -40,14 +41,14 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem('cart', JSON.stringify(cartItems));
   }, [cartItems]);
 
-  const addToCart = (product: Product, quantity: number = 1) => {
+  const addToCart = (product: Product, quantity: number = 1, size?: string) => {
     setCartItems(prevItems => {
-      const existingItem = prevItems.find(item => item.id === product.id);
+      const existingItem = prevItems.find(item => item.id === product.id && item.size === size);
       
       if (existingItem) {
-        // Update quantity if the product is already in the cart
+        // Update quantity if the product with same size is already in the cart
         const updatedItems = prevItems.map(item => 
-          item.id === product.id 
+          item.id === product.id && item.size === size
             ? { ...item, quantity: item.quantity + quantity } 
             : item
         );
@@ -56,7 +57,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } else {
         // Add new product to cart
         toast.success(`Producto añadido: ${product.name}`);
-        return [...prevItems, { ...product, quantity }];
+        return [...prevItems, { ...product, quantity, size }];
       }
     });
   };
