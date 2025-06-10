@@ -49,11 +49,12 @@ const ProductGrid: React.FC<ProductGridProps> = ({
 
       // Si hay una categoría específica, filtrar por ella
       if (category && category !== 'todos') {
+        console.log('Filtering by category:', category);
         query = query.eq('category', category);
       }
 
       // Aplicar límite solo si no es showAll
-      if (!showAll) {
+      if (!showAll && limit) {
         query = query.limit(limit);
       }
 

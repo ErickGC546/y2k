@@ -19,6 +19,18 @@ const CategoryPage: React.FC = () => {
   const categoryKey = categorySlug || '';
   const categoryName = categoryNames[categoryKey] || 'Categoría';
 
+  // Mapear el slug de la URL a los nombres de categoría que están en la base de datos
+  const getCategoryForQuery = (slug: string) => {
+    switch (slug) {
+      case 'mujer': return 'Mujer';
+      case 'hombre': return 'Hombre';
+      case 'accesorios': return 'Accesorios';
+      default: return slug;
+    }
+  };
+
+  const categoryForQuery = getCategoryForQuery(categoryKey);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -27,7 +39,11 @@ const CategoryPage: React.FC = () => {
         <CategoryHeader categoryName={categoryName} />
         
         <div className="container mx-auto px-4 pb-8">
-          <ProductGrid category={categoryKey} />
+          <ProductGrid 
+            category={categoryForQuery} 
+            title={`Productos de ${categoryName}`}
+            showAll={true}
+          />
         </div>
       </main>
       
