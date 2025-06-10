@@ -83,6 +83,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
+        <h2 className="text-2xl font-bold text-center mb-8">{title}</h2>
         <div className="text-center py-8">Cargando productos...</div>
       </div>
     );
