@@ -27,7 +27,7 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
             </a>
           )}
         </div>
-        <ProductGrid limit={limit} />
+        <ProductGrid limit={limit} title="" />
       </div>
     </section>
   );

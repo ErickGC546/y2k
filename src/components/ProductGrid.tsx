@@ -21,15 +21,21 @@ interface ProductGridProps {
   category?: string;
   title?: string;
   showAll?: boolean;
+  limit?: number;
 }
 
-const ProductGrid: React.FC<ProductGridProps> = ({ category, title = "Productos Destacados", showAll = false }) => {
+const ProductGrid: React.FC<ProductGridProps> = ({ 
+  category, 
+  title = "Productos Destacados", 
+  showAll = false,
+  limit 
+}) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchProducts();
-  }, [category, showAll]);
+  }, [category, showAll, limit]);
 
   const fetchProducts = async () => {
     try {
@@ -46,9 +52,10 @@ const ProductGrid: React.FC<ProductGridProps> = ({ category, title = "Productos 
         query = query.eq('category', category);
       }
 
-      // Si no es showAll, limitar a 8 productos
+      // Si no es showAll y hay un limit específico, usar ese limit
       if (!showAll) {
-        query = query.limit(8);
+        const limitToUse = limit || 8;
+        query = query.limit(limitToUse);
       }
 
       const { data, error } = await query;
@@ -102,8 +109,8 @@ const ProductGrid: React.FC<ProductGridProps> = ({ category, title = "Productos 
             originalPrice={product.original_price}
             image={product.image_url || '/placeholder.svg'}
             badge={product.badge}
-            category={product.category}
             slug={product.slug}
+            isNew={product.is_new}
           />
         ))}
       </div>
