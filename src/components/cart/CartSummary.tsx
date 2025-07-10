@@ -34,7 +34,7 @@ const CartSummary: React.FC<CartSummaryProps> = ({
       <div className="border-t pt-4 mb-6">
         <div className="flex justify-between font-bold text-lg">
           <span>Total</span>
-          <span>S/ {totalPrice.toFixed(2)}</span>
+          <span>S/ {(totalPrice + 10.50).toFixed(2)}</span>
         </div>
         <p className="text-gray-500 text-sm mt-1">Impuestos incluidos</p>
       </div>
