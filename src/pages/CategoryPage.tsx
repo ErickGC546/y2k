@@ -43,7 +43,7 @@ const CategoryPage: React.FC = () => {
         <Footer />
       </div>
     );
-  }
+  };
 
   const categoryName = getCategoryName(categorySlug);
   const categoryTitle = getCategoryTitle(categorySlug);
@@ -51,7 +51,7 @@ const CategoryPage: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <CategoryHeader title={categoryTitle} />
+      <CategoryHeader categoryName={categoryTitle} />
       <main className="flex-grow">
         <ProductGrid 
           category={categoryName}
