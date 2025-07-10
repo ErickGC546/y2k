@@ -48,7 +48,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
         .order('created_at', { ascending: false });
 
       // Caso especial para productos nuevos (novedades)
-      if (category === 'new') {
+      if (category === 'novedades') {
         console.log('Filtering by new products');
         query = query.eq('is_new', true);
       } else if (category && category !== 'todos') {

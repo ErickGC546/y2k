@@ -1,22 +1,27 @@
 
 import React from 'react';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import HeroCarousel from '../components/HeroCarousel';
 import FeaturedCategories from '../components/FeaturedCategories';
 import ProductGrid from '../components/ProductGrid';
-import PromoSection from '../components/PromoSection';
-import NewsletterSection from '../components/NewsletterSection';
-import Footer from '../components/Footer';
 
 const Index = () => {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex flex-col">
       <Navbar />
-      <HeroCarousel />
-      <FeaturedCategories />
-      <ProductGrid title="Productos Destacados" showAll={false} limit={8} />
-      <PromoSection />
-      <NewsletterSection />
+      
+      <main className="flex-grow">
+        <HeroCarousel />
+        <FeaturedCategories />
+        
+        {/* Featured Products Section */}
+        <ProductGrid 
+          title="Productos Destacados" 
+          limit={8}
+        />
+      </main>
+      
       <Footer />
     </div>
   );
