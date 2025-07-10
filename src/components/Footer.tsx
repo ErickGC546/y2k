@@ -11,8 +11,8 @@ const Footer = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10 border-b border-gray-800 pb-10">
           <div className="flex flex-col items-center text-center">
             <Truck className="mb-3 text-estilo-gold" size={24} />
-            <h3 className="font-semibold mb-2">Envío Gratis</h3>
-            <p className="text-sm text-gray-400">Para pedidos superiores a S/50</p>
+            <h3 className="font-semibold mb-2">Envío</h3>
+            <p className="text-sm text-gray-400">Envios nacionales</p>
           </div>
           <div className="flex flex-col items-center text-center">
             <CreditCard className="mb-3 text-estilo-gold" size={24} />

@@ -27,7 +27,7 @@ const CartSummary: React.FC<CartSummaryProps> = ({
         </div>
         <div className="flex justify-between">
           <span>Gastos de envío</span>
-          <span>Calculando </span>
+          <span>S/ 10.50 </span>
         </div>
       </div>
       
