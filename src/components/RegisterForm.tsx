@@ -55,10 +55,13 @@ const RegisterForm = () => {
   const onSubmit = async (values: FormValues) => {
     setIsLoading(true);
     try {
+      const redirectUrl = `${window.location.origin}/`;
+      
       const { error } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
         options: {
+          emailRedirectTo: redirectUrl,
           data: {
             full_name: values.name,
           },
@@ -69,9 +72,9 @@ const RegisterForm = () => {
 
       toast({
         title: "Cuenta creada con éxito",
-        description: "Bienvenido a Y2K Store",
+        description: "Revisa tu correo para verificar tu cuenta",
       });
-      navigate('/');
+      navigate('/iniciar-sesion');
     } catch (error: any) {
       toast({
         title: "Error al crear la cuenta",
