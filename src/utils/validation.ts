@@ -13,6 +13,12 @@ export const isValidImageUrl = (url: string): boolean => {
       return false;
     }
     
+    // Block potentially dangerous domains
+    const dangerousDomains = ['localhost', '127.0.0.1', '0.0.0.0', '10.', '192.168.', '172.'];
+    if (dangerousDomains.some(domain => urlObj.hostname.includes(domain))) {
+      return false;
+    }
+    
     // Check for common image extensions
     const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
     const hasValidExtension = imageExtensions.some(ext => 
@@ -32,7 +38,7 @@ export const sanitizeImageUrl = (url: string): string => {
   try {
     const urlObj = new URL(url);
     // Remove potentially dangerous query parameters
-    const dangerousParams = ['script', 'eval', 'javascript', 'data'];
+    const dangerousParams = ['script', 'eval', 'javascript', 'data', 'onload', 'onerror'];
     
     dangerousParams.forEach(param => {
       urlObj.searchParams.delete(param);

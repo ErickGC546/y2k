@@ -24,6 +24,7 @@ import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { isValidImageUrl, sanitizeImageUrl } from "@/utils/validation";
 
 const productSchema = z.object({
   name: z.string().min(1, 'El nombre es requerido'),
@@ -31,7 +32,13 @@ const productSchema = z.object({
   price: z.number().min(0, 'El precio debe ser mayor a 0'),
   original_price: z.number().optional(),
   category: z.string().min(1, 'La categoría es requerida'),
-  image_url: z.string().url('URL de imagen inválida').optional().or(z.literal('')),
+  image_url: z.string()
+    .optional()
+    .or(z.literal(''))
+    .refine((url) => {
+      if (!url || url === '') return true;
+      return isValidImageUrl(url);
+    }, 'URL de imagen inválida o insegura'),
   stock: z.number().min(0, 'El stock debe ser mayor o igual a 0'),
   is_active: z.boolean(),
   is_new: z.boolean(),
@@ -97,7 +104,7 @@ const ProductFormDialog: React.FC<ProductFormDialogProps> = ({
         price: data.price,
         original_price: data.original_price || null,
         category: data.category,
-        image_url: data.image_url || null,
+        image_url: data.image_url ? sanitizeImageUrl(data.image_url) : null,
         stock: data.stock,
         is_active: data.is_active,
         is_new: data.is_new,
