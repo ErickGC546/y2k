@@ -24,7 +24,7 @@ const SearchPage: React.FC = () => {
         .from('products')
         .select('*')
         .eq('is_active', true)
-        .ilike('name', `%${query}%`)
+        .or(`name.ilike.%${query}%,description.ilike.%${query}%,category.ilike.%${query}%,badge.ilike.%${query}%`)
         .order('created_at', { ascending: false })
         .limit(20);
 
