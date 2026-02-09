@@ -15,6 +15,7 @@ import UserProfilePage from "./pages/UserProfilePage";
 import CartPage from "./pages/CartPage";
 import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 import AdminPage from "./pages/AdminPage";
+import SearchPage from "./pages/SearchPage";
 import { CartProvider } from "./contexts/CartContext";
 import FloatingWhatsAppButton from "./components/FloatingWhatsAppButton";
 
@@ -39,6 +40,7 @@ const App = () => (
             <Route path="/carrito" element={<CartPage />} />
             <Route path="/payment-success" element={<PaymentSuccessPage />} />
             <Route path="/admin" element={<AdminPage />} />
+            <Route path="/buscar" element={<SearchPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

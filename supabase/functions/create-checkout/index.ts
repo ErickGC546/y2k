@@ -146,7 +146,7 @@ serve(async (req) => {
     console.error("Error creating MercadoPago checkout:", error);
     
     return new Response(
-      JSON.stringify({ error: error.message || "Error al crear la sesión de pago" }),
+      JSON.stringify({ error: error instanceof Error ? error.message : "Error al crear la sesión de pago" }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 400,

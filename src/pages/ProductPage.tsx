@@ -1,11 +1,14 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { ArrowLeft, ShoppingBag, Heart } from 'lucide-react';
+import { ShoppingBag, Heart } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { supabase } from "@/integrations/supabase/client";
+import ProductImageGallery from '../components/product/ProductImageGallery';
+import SizeSelector from '../components/product/SizeSelector';
+import RelatedProducts from '../components/product/RelatedProducts';
+import StickyAddToCart from '../components/product/StickyAddToCart';
 
 interface Product {
   id: string;
@@ -38,8 +41,6 @@ const ProductPage: React.FC = () => {
 
   const fetchProduct = async () => {
     try {
-      console.log('Fetching product with slug:', productSlug);
-      
       const { data, error } = await supabase
         .from('products')
         .select('*')
@@ -48,59 +49,21 @@ const ProductPage: React.FC = () => {
         .single();
 
       if (error) {
-        console.error('Error fetching product:', error);
         setProduct(null);
         return;
       }
-
-      console.log('Product fetched:', data);
       setProduct(data);
-    } catch (error) {
-      console.error('Error fetching product:', error);
+    } catch {
       setProduct(null);
     } finally {
       setLoading(false);
     }
   };
   
-  if (loading) {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-grow flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-estilo-gold mx-auto"></div>
-            <p className="mt-4 text-gray-600">Cargando producto...</p>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-  
-  // If product not found, show a proper message
-  if (!product) {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-grow flex items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-3xl font-bold mb-4">Producto no encontrado</h1>
-            <p className="mb-6">El producto que estás buscando no existe o ha sido eliminado.</p>
-            <Link to="/" className="inline-block bg-estilo-gold text-white px-6 py-2 font-bold hover:bg-opacity-90 transition-colors">
-              Volver a la tienda
-            </Link>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
   const handleAddToCart = () => {
-    // Convertir el producto de la base de datos al formato que espera el carrito
+    if (!product) return;
     const cartProduct = {
-      id: parseInt(product.id) || Date.now(), // Fallback para ID numérico
+      id: parseInt(product.id) || Date.now(),
       name: product.name,
       category: product.category,
       price: product.price,
@@ -110,9 +73,41 @@ const ProductPage: React.FC = () => {
       badge: product.badge,
       slug: product.slug
     };
-    
     addToCart(cartProduct, quantity, size);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-grow flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-estilo-gold mx-auto"></div>
+            <p className="mt-4 text-muted-foreground">Cargando producto...</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+  
+  if (!product) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-grow flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-3xl font-bold mb-4">Producto no encontrado</h1>
+            <p className="mb-6 text-muted-foreground">El producto que estás buscando no existe o ha sido eliminado.</p>
+            <Link to="/" className="inline-block bg-estilo-gold text-white px-6 py-2 font-bold hover:bg-opacity-90 transition-colors">
+              Volver a la tienda
+            </Link>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   const getCategorySlug = (category: string) => {
     switch (category) {
@@ -128,123 +123,128 @@ const ProductPage: React.FC = () => {
       <Navbar />
       
       <main className="flex-grow">
-        <div className="bg-gray-100 py-6">
+        {/* Breadcrumb */}
+        <div className="bg-muted py-4">
           <div className="container mx-auto px-4">
-            <div className="flex items-center">
-              <Link to="/" className="text-estilo-dark hover:text-estilo-gold transition-colors">
-                Inicio
-              </Link>
-              <span className="text-gray-500 mx-2">/</span>
-              <Link to={`/categoria/${getCategorySlug(product.category)}`} className="text-estilo-dark hover:text-estilo-gold transition-colors">
+            <div className="flex items-center text-sm">
+              <Link to="/" className="text-muted-foreground hover:text-estilo-gold transition-colors">Inicio</Link>
+              <span className="text-muted-foreground mx-2">/</span>
+              <Link to={`/categoria/${getCategorySlug(product.category)}`} className="text-muted-foreground hover:text-estilo-gold transition-colors">
                 {product.category}
               </Link>
-              <span className="text-gray-500 mx-2">/</span>
-              <span className="font-medium">{product.name}</span>
+              <span className="text-muted-foreground mx-2">/</span>
+              <span className="font-medium text-foreground">{product.name}</span>
             </div>
           </div>
         </div>
         
-        <div className="container mx-auto px-4 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Product image */}
-            <div className="relative">
-              <img 
-                src={product.image_url || '/placeholder.svg'} 
-                alt={product.name} 
-                className="w-full h-auto object-cover rounded-md shadow-md" 
-              />
-              {product.badge && (
-                <div className="absolute top-4 left-4 bg-estilo-gold text-white text-sm font-bold py-1 px-3">
-                  {product.badge}
-                </div>
-              )}
-              {product.is_new && (
-                <div className="absolute top-4 right-4 bg-black text-white text-sm font-bold py-1 px-3">
-                  NUEVO
-                </div>
-              )}
-            </div>
+        {/* Product content */}
+        <div className="container mx-auto px-4 py-8 md:py-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+            {/* Image Gallery */}
+            <ProductImageGallery
+              mainImage={product.image_url || '/placeholder.svg'}
+              productName={product.name}
+              badge={product.badge}
+              isNew={product.is_new}
+            />
             
             {/* Product details */}
-            <div>
-              <h1 className="text-3xl font-bold font-montserrat mb-2">{product.name}</h1>
-              <p className="text-gray-600 mb-4">{product.category}</p>
+            <div className="flex flex-col">
+              <span className="text-sm text-muted-foreground uppercase tracking-wider mb-1">{product.category}</span>
+              <h1 className="text-3xl font-bold font-montserrat mb-4">{product.name}</h1>
               
-              <div className="flex items-baseline mb-6">
-                <span className="text-3xl font-bold mr-3">S/ {product.price.toFixed(2)}</span>
+              <div className="flex items-baseline gap-3 mb-6">
+                <span className="text-3xl font-bold">S/ {product.price.toFixed(2)}</span>
                 {product.original_price && (
-                  <span className="text-gray-500 line-through text-lg">
+                  <span className="text-muted-foreground line-through text-lg">
                     S/ {product.original_price.toFixed(2)}
+                  </span>
+                )}
+                {product.original_price && (
+                  <span className="bg-red-100 text-red-700 text-xs font-bold px-2 py-0.5 rounded">
+                    -{Math.round((1 - product.price / product.original_price) * 100)}%
                   </span>
                 )}
               </div>
               
-              <div className="border-t border-b border-gray-200 py-6 mb-6">
-                <p className="text-gray-700 mb-4">
-                  {product.description || "Diseñada para brindarte comodidad y estilo, esta prenda combina materiales de alta calidad con un corte moderno que se adapta perfectamente a tu día a día. Ideal para cualquier ocasión, su diseño versátil permite combinarla fácilmente con otras piezas de tu armario."}
+              <div className="border-t border-border py-6 mb-6">
+                <p className="text-muted-foreground leading-relaxed">
+                  {product.description || "Diseñada para brindarte comodidad y estilo, esta prenda combina materiales de alta calidad con un corte moderno que se adapta perfectamente a tu día a día."}
                 </p>
-                
-                <ul className="list-disc pl-5 text-gray-700">
-                  <li>Material de alta calidad</li>
-                  <li>Diseño exclusivo</li>
-                  <li>Disponible en varias tallas</li>
-                  <li>Stock disponible: {product.stock}</li>
-                </ul>
+              </div>
+
+              {/* Size Selector */}
+              <div className="mb-6">
+                <SizeSelector selectedSize={size} onSizeChange={setSize} />
               </div>
               
-              <div className="flex space-x-4 mb-6">
-                <div className="w-1/3">
-                  <label htmlFor="size" className="block text-sm font-medium text-gray-700 mb-1">
-                    Talla
-                  </label>
-                  <select
-                    id="size"
-                    value={size}
-                    onChange={(e) => setSize(e.target.value)}
-                    className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-estilo-gold"
+              {/* Quantity */}
+              <div className="mb-6">
+                <span className="text-sm font-semibold uppercase tracking-wider block mb-3">Cantidad</span>
+                <div className="flex items-center border border-border w-fit">
+                  <button
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    className="w-10 h-10 flex items-center justify-center hover:bg-muted transition-colors text-lg font-medium"
                   >
-                    <option value="s">S</option>
-                    <option value="m">M</option>
-                    <option value="l">L</option>
-                    <option value="xl">XL</option>
-                  </select>
-                </div>
-                
-                <div className="w-1/3">
-                  <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 mb-1">
-                    Cantidad
-                  </label>
-                  <select
-                    id="quantity"
-                    value={quantity}
-                    onChange={(e) => setQuantity(parseInt(e.target.value))}
-                    className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-estilo-gold"
+                    −
+                  </button>
+                  <span className="w-12 h-10 flex items-center justify-center border-x border-border font-medium">
+                    {quantity}
+                  </span>
+                  <button
+                    onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
+                    className="w-10 h-10 flex items-center justify-center hover:bg-muted transition-colors text-lg font-medium"
                   >
-                    {[...Array(Math.min(5, product.stock))].map((_, i) => (
-                      <option key={i + 1} value={i + 1}>{i + 1}</option>
-                    ))}
-                  </select>
+                    +
+                  </button>
                 </div>
+                <p className="text-xs text-muted-foreground mt-2">{product.stock} disponible(s)</p>
               </div>
               
-              <div className="flex space-x-4">
+              {/* Actions */}
+              <div className="flex gap-3">
                 <button 
-                  className="flex-1 bg-estilo-gold text-white py-3 font-bold hover:bg-opacity-90 transition-colors flex items-center justify-center disabled:bg-gray-400 disabled:cursor-not-allowed"
+                  className="flex-1 bg-estilo-gold text-white py-3.5 font-bold hover:bg-opacity-90 transition-colors flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
                   onClick={handleAddToCart}
                   disabled={product.stock === 0}
                 >
-                  <ShoppingBag size={18} className="mr-2" />
+                  <ShoppingBag size={18} />
                   {product.stock === 0 ? 'SIN STOCK' : 'AÑADIR AL CARRITO'}
                 </button>
-                
-                <button className="bg-white text-estilo-dark border border-gray-300 p-3 hover:bg-gray-100 transition-colors">
+                <button className="border border-border p-3.5 hover:bg-muted transition-colors">
                   <Heart size={20} />
                 </button>
+              </div>
+
+              {/* Extra info */}
+              <div className="mt-8 space-y-3 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <span>✓</span> Envío gratis en pedidos mayores a S/ 150
+                </div>
+                <div className="flex items-center gap-2">
+                  <span>✓</span> Devolución gratuita en 30 días
+                </div>
+                <div className="flex items-center gap-2">
+                  <span>✓</span> Material de alta calidad
+                </div>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Related Products */}
+        <RelatedProducts category={product.category} currentProductId={product.id} />
       </main>
+
+      {/* Sticky Add to Cart Bar */}
+      <StickyAddToCart
+        productName={product.name}
+        price={product.price}
+        originalPrice={product.original_price}
+        onAddToCart={handleAddToCart}
+        disabled={product.stock === 0}
+      />
       
       <Footer />
     </div>
