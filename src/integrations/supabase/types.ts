@@ -228,6 +228,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      decrement_stock: {
+        Args: { p_product_id: string; p_quantity: number }
+        Returns: undefined
+      }
       get_all_users_for_admin: {
         Args: never
         Returns: {
