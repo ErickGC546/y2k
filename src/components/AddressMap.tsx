@@ -1,13 +1,19 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
+import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import { Button } from '@/components/ui/button';
 import { MapPin } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-// Mapbox public token
-const MAPBOX_TOKEN = 'pk.eyJ1IjoiZXN0aWxvYWZybyIsImEiOiJjbHgwZzV4aWkwMzBrMmlvNzkxZ213bWdwIn0.DrUs64GU9eTKGbQ0VrCo5A';
+// Fix default marker icon
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+});
 
 interface AddressMapProps {
   address?: string;
@@ -15,75 +21,63 @@ interface AddressMapProps {
   readOnly?: boolean;
 }
 
+const DraggableMarker: React.FC<{
+  position: [number, number];
+  onDragEnd: (lat: number, lng: number) => void;
+  readOnly: boolean;
+}> = ({ position, onDragEnd, readOnly }) => {
+  const markerRef = useRef<L.Marker>(null);
+
+  const eventHandlers = readOnly ? {} : {
+    dragend() {
+      const marker = markerRef.current;
+      if (marker) {
+        const latlng = marker.getLatLng();
+        onDragEnd(latlng.lat, latlng.lng);
+      }
+    },
+  };
+
+  return (
+    <Marker
+      draggable={!readOnly}
+      eventHandlers={eventHandlers}
+      position={position}
+      ref={markerRef}
+    />
+  );
+};
+
+const FlyToPosition: React.FC<{ position: [number, number] }> = ({ position }) => {
+  const map = useMap();
+  useEffect(() => {
+    map.flyTo(position, 15);
+  }, [position, map]);
+  return null;
+};
+
 const AddressMap: React.FC<AddressMapProps> = ({ address, onSelectLocation, readOnly = false }) => {
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
-  const marker = useRef<mapboxgl.Marker | null>(null);
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  
-  // Initialize map
+  const [position, setPosition] = useState<[number, number]>([-12.04, -77.03]); // Lima default
+
   useEffect(() => {
-    if (!mapContainer.current) return;
-    
-    mapboxgl.accessToken = MAPBOX_TOKEN;
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/streets-v11',
-      center: [-77.03, -12.04], // Default: Lima, Peru
-      zoom: 12
-    });
-
-    // Add navigation controls
-    map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
-    
-    // Create marker
-    marker.current = new mapboxgl.Marker({ color: '#C9A96F', draggable: !readOnly })
-      .setLngLat([-77.03, -12.04])
-      .addTo(map.current);
-
-    if (!readOnly) {
-      // Set up dragend event for marker if not read-only
-      marker.current.on('dragend', () => {
-        if (marker.current && onSelectLocation) {
-          const lngLat = marker.current.getLngLat();
-          reverseGeocode(lngLat.lng, lngLat.lat);
-        }
-      });
-    }
-
-    // Cleanup
-    return () => {
-      if (map.current) {
-        map.current.remove();
-      }
-    };
-  }, [readOnly, onSelectLocation]);
-
-  // If an address is provided, geocode it to show on map
-  useEffect(() => {
-    if (address && map.current) {
+    if (address) {
       setLoading(true);
       geocodeAddress(address);
     }
   }, [address]);
 
-  // Geocode address to coordinates
   const geocodeAddress = async (searchAddress: string) => {
     try {
       const response = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(searchAddress)}.json?access_token=${MAPBOX_TOKEN}`
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchAddress)}&limit=1`
       );
-      
       const data = await response.json();
-      
-      if (data.features && data.features.length > 0) {
-        const [lng, lat] = data.features[0].center;
-        
-        if (map.current && marker.current) {
-          map.current.flyTo({ center: [lng, lat], zoom: 15 });
-          marker.current.setLngLat([lng, lat]);
-        }
+      if (data && data.length > 0) {
+        const lat = parseFloat(data[0].lat);
+        const lon = parseFloat(data[0].lon);
+        setPosition([lat, lon]);
       }
     } catch (error) {
       console.error('Error geocoding address:', error);
@@ -92,40 +86,33 @@ const AddressMap: React.FC<AddressMapProps> = ({ address, onSelectLocation, read
     }
   };
 
-  // Reverse geocode coordinates to address
-  const reverseGeocode = async (lng: number, lat: number) => {
+  const reverseGeocode = async (lat: number, lng: number) => {
     try {
       const response = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${MAPBOX_TOKEN}`
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
       );
-      
       const data = await response.json();
-      
-      if (data.features && data.features.length > 0) {
-        const place = data.features[0].place_name;
-        
-        if (onSelectLocation) {
-          onSelectLocation(place, [lng, lat]);
-        }
+      if (data && data.display_name && onSelectLocation) {
+        onSelectLocation(data.display_name, [lng, lat]);
       }
     } catch (error) {
       console.error('Error reverse geocoding:', error);
     }
   };
 
+  const handleMarkerDragEnd = (lat: number, lng: number) => {
+    setPosition([lat, lng]);
+    reverseGeocode(lat, lng);
+  };
+
   const handleUseCurrentLocation = () => {
     if (navigator.geolocation) {
       setLoading(true);
       navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { longitude, latitude } = position.coords;
-          
-          if (map.current && marker.current) {
-            map.current.flyTo({ center: [longitude, latitude], zoom: 15 });
-            marker.current.setLngLat([longitude, latitude]);
-          }
-          
-          reverseGeocode(longitude, latitude);
+        (pos) => {
+          const { latitude, longitude } = pos.coords;
+          setPosition([latitude, longitude]);
+          reverseGeocode(latitude, longitude);
           setLoading(false);
         },
         (error) => {
@@ -149,14 +136,27 @@ const AddressMap: React.FC<AddressMapProps> = ({ address, onSelectLocation, read
 
   return (
     <div className="space-y-2">
-      <div 
-        ref={mapContainer} 
-        className="h-64 w-full rounded-md border border-gray-300 shadow-sm"
-      />
+      <MapContainer
+        center={position}
+        zoom={13}
+        className="h-64 w-full rounded-md border border-border shadow-sm z-0"
+        style={{ height: '256px' }}
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <DraggableMarker
+          position={position}
+          onDragEnd={handleMarkerDragEnd}
+          readOnly={readOnly}
+        />
+        <FlyToPosition position={position} />
+      </MapContainer>
       
       {!readOnly && (
         <div className="flex justify-between items-center">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted-foreground">
             Arrastra el pin para seleccionar una ubicación exacta
           </p>
           <Button
