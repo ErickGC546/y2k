@@ -159,7 +159,7 @@ const AddressMapContent: React.FC<AddressMapContentProps> = ({ address, onSelect
     <div className="space-y-2">
       <div
         ref={mapContainerRef}
-        style={{ height: '400px', width: '100%' }}
+        style={{ height: '260px', width: '100%' }}
         className="rounded-md border border-border shadow-sm z-0"
       />
       {!readOnly && (
