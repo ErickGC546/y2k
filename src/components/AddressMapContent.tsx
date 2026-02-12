@@ -1,22 +1,8 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
 import { Button } from '@/components/ui/button';
 import { MapPin } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-
-import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: markerIcon2x,
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow,
-});
 
 interface AddressMapContentProps {
   address?: string;
@@ -24,55 +10,95 @@ interface AddressMapContentProps {
   readOnly?: boolean;
 }
 
-const DraggableMarker: React.FC<{
-  position: [number, number];
-  onDragEnd: (lat: number, lng: number) => void;
-  readOnly: boolean;
-}> = ({ position, onDragEnd, readOnly }) => {
-  const markerRef = useRef<L.Marker>(null);
-
-  const eventHandlers = readOnly ? {} : {
-    dragend() {
-      const marker = markerRef.current;
-      if (marker) {
-        const latlng = marker.getLatLng();
-        onDragEnd(latlng.lat, latlng.lng);
-      }
-    },
-  };
-
-  return (
-    <Marker
-      draggable={!readOnly}
-      eventHandlers={eventHandlers}
-      position={position}
-      ref={markerRef}
-    />
-  );
-};
-
-const FlyToPosition: React.FC<{ position: [number, number] }> = ({ position }) => {
-  const map = useMap();
-  useEffect(() => {
-    map.flyTo(position, 15);
-  }, [position, map]);
-  return null;
-};
-
 const AddressMapContent: React.FC<AddressMapContentProps> = ({ address, onSelectLocation, readOnly = false }) => {
   const { toast } = useToast();
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<any>(null);
+  const markerRef = useRef<any>(null);
   const [loading, setLoading] = useState(false);
-  const [position, setPosition] = useState<[number, number]>([-12.04, -77.03]);
+  const positionRef = useRef<[number, number]>([-12.04, -77.03]);
 
   useEffect(() => {
-    if (address) {
-      setLoading(true);
-      geocodeAddress(address);
+    if (typeof window === 'undefined') return;
+
+    let L: any;
+    let destroyed = false;
+
+    const initMap = async () => {
+      // Dynamic import of leaflet
+      L = (await import('leaflet')).default;
+      await import('leaflet/dist/leaflet.css');
+
+      // Fix default marker icons for Vite
+      const iconRetinaUrl = (await import('leaflet/dist/images/marker-icon-2x.png')).default;
+      const iconUrl = (await import('leaflet/dist/images/marker-icon.png')).default;
+      const shadowUrl = (await import('leaflet/dist/images/marker-shadow.png')).default;
+
+      delete (L.Icon.Default.prototype as any)._getIconUrl;
+      L.Icon.Default.mergeOptions({ iconRetinaUrl, iconUrl, shadowUrl });
+
+      if (destroyed || !mapContainerRef.current) return;
+
+      // Destroy existing map if any
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+
+      const map = L.map(mapContainerRef.current).setView(positionRef.current, 13);
+      mapInstanceRef.current = map;
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      }).addTo(map);
+
+      const marker = L.marker(positionRef.current, { draggable: !readOnly }).addTo(map);
+      markerRef.current = marker;
+
+      if (!readOnly) {
+        marker.on('dragend', () => {
+          const latlng = marker.getLatLng();
+          positionRef.current = [latlng.lat, latlng.lng];
+          reverseGeocode(latlng.lat, latlng.lng);
+        });
+      }
+
+      // Geocode initial address
+      if (address) {
+        geocodeAddress(address, map, marker);
+      }
+
+      // Fix map size after render
+      setTimeout(() => {
+        if (mapInstanceRef.current) {
+          mapInstanceRef.current.invalidateSize();
+        }
+      }, 200);
+    };
+
+    initMap();
+
+    return () => {
+      destroyed = true;
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Re-geocode when address changes
+  useEffect(() => {
+    if (address && mapInstanceRef.current && markerRef.current) {
+      geocodeAddress(address, mapInstanceRef.current, markerRef.current);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address]);
 
-  const geocodeAddress = async (searchAddress: string) => {
+  const geocodeAddress = async (searchAddress: string, map: any, marker: any) => {
     try {
+      setLoading(true);
       const response = await fetch(
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchAddress)}&limit=1`
       );
@@ -80,7 +106,9 @@ const AddressMapContent: React.FC<AddressMapContentProps> = ({ address, onSelect
       if (data && data.length > 0) {
         const lat = parseFloat(data[0].lat);
         const lon = parseFloat(data[0].lon);
-        setPosition([lat, lon]);
+        positionRef.current = [lat, lon];
+        map.flyTo([lat, lon], 15);
+        marker.setLatLng([lat, lon]);
       }
     } catch (error) {
       console.error('Error geocoding address:', error);
@@ -103,62 +131,37 @@ const AddressMapContent: React.FC<AddressMapContentProps> = ({ address, onSelect
     }
   };
 
-  const handleMarkerDragEnd = (lat: number, lng: number) => {
-    setPosition([lat, lng]);
-    reverseGeocode(lat, lng);
-  };
-
   const handleUseCurrentLocation = () => {
-    if (navigator.geolocation) {
-      setLoading(true);
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const { latitude, longitude } = pos.coords;
-          setPosition([latitude, longitude]);
-          reverseGeocode(latitude, longitude);
-          setLoading(false);
-        },
-        (error) => {
-          console.error('Error getting location:', error);
-          toast({
-            title: "Error",
-            description: "No se pudo obtener tu ubicación actual",
-            variant: "destructive"
-          });
-          setLoading(false);
-        }
-      );
-    } else {
-      toast({
-        title: "Error",
-        description: "Tu navegador no admite geolocalización",
-        variant: "destructive"
-      });
+    if (!navigator.geolocation) {
+      toast({ title: "Error", description: "Tu navegador no admite geolocalización", variant: "destructive" });
+      return;
     }
+    setLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        positionRef.current = [latitude, longitude];
+        if (mapInstanceRef.current && markerRef.current) {
+          mapInstanceRef.current.flyTo([latitude, longitude], 15);
+          markerRef.current.setLatLng([latitude, longitude]);
+        }
+        reverseGeocode(latitude, longitude);
+        setLoading(false);
+      },
+      () => {
+        toast({ title: "Error", description: "No se pudo obtener tu ubicación actual", variant: "destructive" });
+        setLoading(false);
+      }
+    );
   };
 
   return (
     <div className="space-y-2">
-      <div className="h-[256px] w-full rounded-md border border-border shadow-sm overflow-hidden">
-        <MapContainer
-          center={position}
-          zoom={13}
-          className="h-full w-full z-0"
-          style={{ height: '100%', width: '100%' }}
-        >
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <DraggableMarker
-            position={position}
-            onDragEnd={handleMarkerDragEnd}
-            readOnly={readOnly}
-          />
-          <FlyToPosition position={position} />
-        </MapContainer>
-      </div>
-      
+      <div
+        ref={mapContainerRef}
+        style={{ height: '400px', width: '100%' }}
+        className="rounded-md border border-border shadow-sm z-0"
+      />
       {!readOnly && (
         <div className="flex justify-between items-center">
           <p className="text-sm text-muted-foreground">
