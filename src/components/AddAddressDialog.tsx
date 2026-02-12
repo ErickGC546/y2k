@@ -77,14 +77,14 @@ const AddAddressDialog: React.FC<AddAddressDialogProps> = ({ open, onOpenChange,
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md md:max-w-xl">
+      <DialogContent className="sm:max-w-md md:max-w-xl max-h-[90vh] overflow-y-auto p-4">
         <DialogHeader>
           <DialogTitle>Añadir dirección</DialogTitle>
           <DialogDescription>
-            Selecciona tu ubicación en el mapa o escribe tu dirección completa para que podamos entregar tus productos.
+            Selecciona tu ubicación en el mapa o escribe tu dirección completa.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleAddAddress} className="space-y-4 py-2">
+        <form onSubmit={handleAddAddress} className="space-y-3 py-1">
           <AddressMap 
             address={address} 
             onSelectLocation={handleLocationSelected} 
