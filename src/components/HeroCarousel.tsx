@@ -14,7 +14,7 @@ const slides = [
   },
   {
     id: 2,
-    image: 'https://i.ibb.co/m5ysYxmy/Grupo-de-ropa-Azul.png',
+    image: 'https://i.pinimg.com/1200x/f2/77/f4/f277f45745b4e6acbdfa965ee93be029.jpg',
     title: 'COLECCIÓN HOMBRES',
     subtitle: 'Diseños únicos y limitados',
     cta: 'DESCUBRIR',
@@ -23,7 +23,7 @@ const slides = [
   },
   {
     id: 3,
-    image: 'https://media.boohoo.com/i/boohoo/bmm94988_red_xl?w=537&qlt=default&fmt.jp2.qlt=70&fmt=auto&sm=fit',
+    image: 'https://i.ibb.co/1G1V7Lrp/conjuntodemujer.png',
     title: 'COLECCIÓN MUJERES',
     subtitle: 'Diseños únicos y limitados',
     cta: 'DESCUBRIR',

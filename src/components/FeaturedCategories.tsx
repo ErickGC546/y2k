@@ -7,13 +7,13 @@ const categories = [
   {
     id: 1,
     name: 'Mujer',
-    image: 'https://images.unsplash.com/photo-1581044777550-4cfa60707c03?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=686&q=80',
+    image: 'https://i.ibb.co/Wv7V6B9B/negromujer.jpg',
     slug: 'mujer',
   },
   {
     id: 2,
     name: 'Hombre',
-    image: 'https://images.unsplash.com/photo-1610652492500-ded49ceeb378?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
+    image: 'https://i.ibb.co/vC63KkJ7/celestehombre.jpg',
     slug: 'hombre',
   }
 ];
