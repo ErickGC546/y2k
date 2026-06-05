@@ -63,7 +63,7 @@ const ProductPage: React.FC = () => {
   const handleAddToCart = () => {
     if (!product) return;
     const cartProduct = {
-      id: parseInt(product.id) || Date.now(),
+      id: product.id,
       name: product.name,
       category: product.category,
       price: product.price,
