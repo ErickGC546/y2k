@@ -6,8 +6,8 @@ import { CartItem as CartItemType } from '@/contexts/CartContext';
 
 interface CartItemProps {
   item: CartItemType;
-  onUpdateQuantity: (productId: number, quantity: number) => void;
-  onRemoveFromCart: (productId: number) => void;
+  onUpdateQuantity: (productId: string, quantity: number) => void;
+  onRemoveFromCart: (productId: string) => void;
 }
 
 const CartItem: React.FC<CartItemProps> = ({ item, onUpdateQuantity, onRemoveFromCart }) => {
