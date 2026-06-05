@@ -33,7 +33,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
     
     // Convertir los datos para que sean compatibles con el contexto del carrito
     const product = {
-      id: parseInt(id) || Date.now(), // Convertir string UUID a número, fallback si falla
+      id,
       name,
       category: 'general', // Categoría por defecto
       price,

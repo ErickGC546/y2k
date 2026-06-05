@@ -7,8 +7,8 @@ import CartItem from './CartItem';
 
 interface CartItemListProps {
   cartItems: CartItemType[];
-  updateQuantity: (productId: number, quantity: number) => void;
-  removeFromCart: (productId: number) => void;
+  updateQuantity: (productId: string, quantity: number) => void;
+  removeFromCart: (productId: string) => void;
 }
 
 const CartItemList: React.FC<CartItemListProps> = ({ 
